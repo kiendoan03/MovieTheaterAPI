@@ -7,9 +7,7 @@ namespace MovieTheaterAPI.DTOs
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
-        //public MovieDTO Movie { get; set; } = null!;
         public int RoomId { get; set; }
-        //public RoomDTO Room { get; set; } = null!;
         [DataType(DataType.Date)]
         public string? ScheduleDate { get; set; }
         [DataType(DataType.Time)]

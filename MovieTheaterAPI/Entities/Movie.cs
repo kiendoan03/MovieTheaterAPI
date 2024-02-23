@@ -7,7 +7,6 @@ namespace MovieTheaterAPI.Entities
     {
         public int Id { get; set; }
         public string MovieName { get; set; } = null!;
-        //public string Duration { get; set; } = null!;
         [DataType(DataType.Date)]
         public DateOnly? ReleaseDate { get; set; }
         [DataType(DataType.Date)]

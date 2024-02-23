@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class StaffsController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public StaffsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StaffDTO>>> GetStaffs()
         {
-            //var staffs = await _context.Staffs.ToListAsync();
             var staffs = await _unitOfWork.StaffRepository.GetAll();
             return _mapper.Map<List<StaffDTO>>(staffs);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<StaffDTO>> GetStaff(int id)
         {
-            //var staff = await _context.Staffs.FindAsync(id);
             var staff = await _unitOfWork.StaffRepository.GetById(id);
 
             if (staff == null)
@@ -63,12 +59,10 @@ namespace MovieTheaterAPI.Controllers
             }
             var updatedStaff = _mapper.Map<Staff>(staff);
 
-            //_context.Entry(updatedStaff).State = EntityState.Modified;
             await _unitOfWork.StaffRepository.Update(updatedStaff);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -92,8 +86,6 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<StaffDTO>> PostStaff(StaffDTO staff)
         {
             var newStaff = _mapper.Map<Staff>(staff);
-            //_context.Staffs.Add(newStaff);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.StaffRepository.Add(newStaff);
             await _unitOfWork.Save();
 
@@ -104,15 +96,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
-            //var staff = await _context.Staffs.FindAsync(id);
             var staff = await _unitOfWork.StaffRepository.GetById(id);
             if (staff == null)
             {
                 return NotFound();
             }
 
-            //_context.Staffs.Remove(staff);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.StaffRepository.Delete(staff);
             await _unitOfWork.Save();
 

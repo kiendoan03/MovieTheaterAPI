@@ -6,7 +6,6 @@
         public int RoomId { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
-        //public bool IsReserved { get; set; }
         public Room Room { get; set; } = null!;
         public int SeatTypeId { get; set; }
         public SeatType SeatType { get; set; } = null!;

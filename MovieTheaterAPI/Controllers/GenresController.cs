@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class GenresController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public GenresController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
         {
-            //var genres = await _context.Genres.ToListAsync();
             var genres = await _unitOfWork.GenreRepository.GetAll();
             return _mapper.Map<List<GenreDTO>>(genres);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenreDTO>> GetGenre(int id)
         {
-            //var genre = await _context.Genres.FindAsync(id);
             var genre = await _unitOfWork.GenreRepository.GetById(id);
 
             if (genre == null)
@@ -64,12 +60,10 @@ namespace MovieTheaterAPI.Controllers
 
             var update_genre = _mapper.Map<Genre>(genre);
 
-            //_context.Entry(update_genre).State = EntityState.Modified;
             await _unitOfWork.GenreRepository.Update(update_genre);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -93,8 +87,6 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO genre)
         {
             var new_genre = _mapper.Map<Genre>(genre);
-            //_context.Genres.Add(new_genre);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.GenreRepository.Add(new_genre);
             await _unitOfWork.Save();
 
@@ -105,15 +97,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
-            //var genre = await _context.Genres.FindAsync(id);
             var genre = await _unitOfWork.GenreRepository.GetById(id);
             if (genre == null)
             {
                 return NotFound();
             }
 
-            //_context.Genres.Remove(genre);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.GenreRepository.Delete(genre);
             await _unitOfWork.Save();
 
@@ -122,7 +111,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool GenreExists(int id)
         {
-            //return _context.Genres.Any(e => e.Id == id);
             return _unitOfWork.GenreRepository.IsExists(id).Result;
         }
     }

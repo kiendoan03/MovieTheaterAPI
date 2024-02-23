@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class DirectorsController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public DirectorsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
-            //var directors = await _context.Directors.ToListAsync();
             var directors = await _unitOfWork.DirectorRepository.GetAll();
             return _mapper.Map<List<DirectorDTO>>(directors);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DirectorDTO>> GetDirector(int id)
         {
-            //var director = await _context.Directors.FindAsync(id);
             var director = await _unitOfWork.DirectorRepository.GetById(id);
 
             if (director == null)
@@ -64,12 +60,10 @@ namespace MovieTheaterAPI.Controllers
 
             var updatedDirector = _mapper.Map<Director>(director);
 
-            //_context.Entry(updatedDirector).State = EntityState.Modified;
             await _unitOfWork.DirectorRepository.Update(updatedDirector);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -93,8 +87,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<DirectorDTO>> PostDirector(DirectorDTO director)
         {
             var newDirector = _mapper.Map<Director>(director);
-            //_context.Directors.Add(newDirector);
-            //await _context.SaveChangesAsync();
+            
             await _unitOfWork.DirectorRepository.Add(newDirector);
             await _unitOfWork.Save();
 
@@ -105,15 +98,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDirector(int id)
         {
-            //var director = await _context.Directors.FindAsync(id);
             var director = await _unitOfWork.DirectorRepository.GetById(id);
             if (director == null)
             {
                 return NotFound();
             }
 
-            //_context.Directors.Remove(director);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.DirectorRepository.Delete(director);
             await _unitOfWork.Save();
 
@@ -122,7 +112,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool DirectorExists(int id)
         {
-            //return _context.Directors.Any(e => e.Id == id);
             return _unitOfWork.DirectorRepository.IsExists(id).Result;
         }
     }

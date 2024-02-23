@@ -12,7 +12,7 @@ namespace MovieTheaterAPI.Repository
 
         public async Task<IEnumerable<Ticket>> GetTicketsByCustomer(int customerId)
         {
-            return await _context.Tickets.Where(x => x.CustomerId == customerId).ToListAsync();
+            return await _context.Tickets.Where(x => x.CustomerId == customerId).Where(y => y.status == 2).ToListAsync();
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsBySchedule(int scheduleId)
@@ -22,7 +22,7 @@ namespace MovieTheaterAPI.Repository
 
         public async Task<List<Ticket>> GetTicketToBooking()
         {
-            return await _context.Tickets.Where(x => x.status == 1).ToListAsync();
+            return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == 2).ToListAsync();
         }
     }
 }

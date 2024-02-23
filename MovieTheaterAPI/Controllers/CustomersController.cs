@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public CustomersController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-            //var customers = await _context.Customers.ToListAsync();
             var customers = await _unitOfWork.CustomerRepository.GetAll();
             return _mapper.Map<List<CustomerDTO>>(customers);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
-            //var customer = await _context.Customers.FindAsync(id);
             var customer = await _unitOfWork.CustomerRepository.GetById(id);
 
             if (customer == null)
@@ -63,12 +59,10 @@ namespace MovieTheaterAPI.Controllers
             }
             var updateCustomer = _mapper.Map<Customer>(customer);
 
-            //_context.Entry(updateCustomer).State = EntityState.Modified;
             await _unitOfWork.CustomerRepository.Update(updateCustomer);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -92,8 +86,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<CustomerDTO>> PostCustomer(CustomerDTO customer)
         {
             var newCustomer = _mapper.Map<Customer>(customer);
-            //_context.Customers.Add(newCustomer);
-            //await _context.SaveChangesAsync();
+           
             await _unitOfWork.CustomerRepository.Add(newCustomer);
             await _unitOfWork.Save();
 
@@ -104,15 +97,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            //var customer = await _context.Customers.FindAsync(id);
             var customer = await _unitOfWork.CustomerRepository.GetById(id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            //_context.Customers.Remove(customer);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.CustomerRepository.Delete(customer);
             await _unitOfWork.Save();
 
@@ -121,7 +111,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool CustomerExists(int id)
         {
-            //return _context.Customers.Any(e => e.Id == id);
             return _unitOfWork.CustomerRepository.IsExists(id).Result;
         }
     }

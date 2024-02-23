@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class CastsController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public CastsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CastDTO>>> GetCasts()
         {
-            //var casts = await _context.Casts.ToListAsync();
             var casts = await _unitOfWork.CastRepository.GetAll();
             return _mapper.Map<List<CastDTO>>(casts);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CastDTO>> GetCast(int id)
         {
-            //var cast = await _context.Casts.FindAsync(id);
             var cast = await _unitOfWork.CastRepository.GetById(id);
 
             if (cast == null)
@@ -64,12 +60,10 @@ namespace MovieTheaterAPI.Controllers
 
             var updatedCast = _mapper.Map<Cast>(cast);
 
-            //_context.Entry(updatedCast).State = EntityState.Modified;
             await _unitOfWork.CastRepository.Update(updatedCast);   
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -93,8 +87,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<CastDTO>> PostCast(CastDTO cast)
         {
             var newCast = _mapper.Map<Cast>(cast);
-            //_context.Casts.Add(newCast);
-            //await _context.SaveChangesAsync();
+            
             await _unitOfWork.CastRepository.Add(newCast);
             await _unitOfWork.Save();
 
@@ -105,15 +98,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCast(int id)
         {
-            //var cast = await _context.Casts.FindAsync(id);
             var cast = await _unitOfWork.CastRepository.GetById(id);
             if (cast == null)
             {
                 return NotFound();
             }
 
-            //_context.Casts.Remove(cast);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.CastRepository.Delete(cast);
             await _unitOfWork.Save();
 
@@ -122,7 +112,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool CastExists(int id)
         {
-            //return _context.Casts.Any(e => e.Id == id);
             return _unitOfWork.CastRepository.IsExists(id).Result;
         }
     }

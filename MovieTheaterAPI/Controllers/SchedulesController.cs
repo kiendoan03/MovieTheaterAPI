@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class SchedulesController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public SchedulesController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedules()
         {
-            //var schedules = await _context.Schedules.ToListAsync();
             var schedules = await _unitOfWork.ScheduleRepository.GetAll();
             return _mapper.Map<List<ScheduleDTO>>(schedules);
         }
@@ -41,7 +38,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ScheduleDTO>> GetSchedule(int id)
         {
-            //var schedule = await _context.Schedules.FindAsync(id);
             var schedule = await _unitOfWork.ScheduleRepository.GetById(id);
 
             if (schedule == null)
@@ -62,12 +58,10 @@ namespace MovieTheaterAPI.Controllers
                 return BadRequest();
             }
             var updatedSchedule = _mapper.Map<Schedule>(schedule);
-            //_context.Entry(schedule).State = EntityState.Modified;
             await _unitOfWork.ScheduleRepository.Update(updatedSchedule);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -91,12 +85,9 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<ScheduleDTO>> PostSchedule(ScheduleDTO schedule)
         {
             var newSchedule = _mapper.Map<Schedule>(schedule);
-            //_context.Schedules.Add(newSchedule);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.ScheduleRepository.Add(newSchedule);
             await _unitOfWork.Save();
 
-            //var seats = await _context.Seats.Where(s => s.RoomId == schedule.RoomId).ToListAsync();
             var seats = await _unitOfWork.SeatRepository.GetSeatsByRoomId(schedule.RoomId);
 
             foreach (var seat in seats)
@@ -108,8 +99,6 @@ namespace MovieTheaterAPI.Controllers
                     FinalPrice = seat.SeatType.Price,
                     status = 0
                 };
-                //_context.Tickets.Add(ticket);
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.TicketRepository.Add(ticket);
                 await _unitOfWork.Save();
             }
@@ -121,15 +110,12 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
-            //var schedule = await _context.Schedules.FindAsync(id);
             var schedule = await _unitOfWork.ScheduleRepository.GetById(id);
             if (schedule == null)
             {
                 return NotFound();
             }
 
-            //_context.Schedules.Remove(schedule);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.ScheduleRepository.Delete(schedule);
             await _unitOfWork.Save();
 

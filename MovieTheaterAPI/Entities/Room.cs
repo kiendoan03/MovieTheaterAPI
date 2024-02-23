@@ -4,7 +4,6 @@
     {
         public int Id { get; set; }
         public string RoomName { get; set; } = null!;
-        //public int RoomCapacity { get; } = 66;
         public int RoomTypeId { get; set; }
         public RoomType RoomType { get; set; } = null!;
         public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

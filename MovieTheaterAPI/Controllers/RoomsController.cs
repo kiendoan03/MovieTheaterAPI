@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public RoomsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
-            //var rooms = await _context.Rooms.ToListAsync();
             var rooms = await _unitOfWork.RoomRepository.GetAll();
 
             return _mapper.Map<List<RoomDTO>>(rooms);
@@ -42,7 +39,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
-            //var room = await _context.Rooms.FindAsync(id);
             var room = await _unitOfWork.RoomRepository.GetById(id);
 
             if (room == null)
@@ -64,12 +60,10 @@ namespace MovieTheaterAPI.Controllers
             }
             var updatedRoom = _mapper.Map<Room>(room);
 
-            //_context.Entry(updatedRoom).State = EntityState.Modified;
             await _unitOfWork.RoomRepository.Update(updatedRoom);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -93,8 +87,6 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO room)
         {
             var newRoom = _mapper.Map<Room>(room);
-            //_context.Rooms.Add(newRoom);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.RoomRepository.Add(newRoom);
             await _unitOfWork.Save();
             if(room.RoomTypeId == 1)
@@ -110,8 +102,6 @@ namespace MovieTheaterAPI.Controllers
                             seat.Row = i;
                             seat.Column = j;
                             seat.SeatTypeId = 1;
-                            //_context.Seats.Add(seat);
-                            //await _context.SaveChangesAsync();
                             await _unitOfWork.SeatRepository.Add(seat);
                             await _unitOfWork.Save();
                         }
@@ -122,8 +112,6 @@ namespace MovieTheaterAPI.Controllers
                             seat.Row = i;
                             seat.Column = j;
                             seat.SeatTypeId = 2;
-                            //_context.Seats.Add(seat);
-                            //await _context.SaveChangesAsync();
                             await _unitOfWork.SeatRepository.Add(seat);
                             await _unitOfWork.Save();
                         }
@@ -134,8 +122,6 @@ namespace MovieTheaterAPI.Controllers
                             seat.Row = i;
                             seat.Column = j;
                             seat.SeatTypeId = 3;
-                            //_context.Seats.Add(seat);
-                            //await _context.SaveChangesAsync();
                             await _unitOfWork.SeatRepository.Add(seat);
                             await _unitOfWork.Save();
                         }
@@ -154,8 +140,6 @@ namespace MovieTheaterAPI.Controllers
                             seat.Row = i;
                             seat.Column = j;
                             seat.SeatTypeId = 4;
-                            //_context.Seats.Add(seat);
-                            //await _context.SaveChangesAsync();
                             await _unitOfWork.SeatRepository.Add(seat);
                             await _unitOfWork.Save();
                     }
@@ -170,15 +154,11 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            //var room = await _context.Rooms.FindAsync(id);
             var room = await _unitOfWork.RoomRepository.GetById(id);
             if (room == null)
             {
                 return NotFound();
             }
-
-            //_context.Rooms.Remove(room);
-            //await _context.SaveChangesAsync();
             await _unitOfWork.RoomRepository.Delete(room);
             await _unitOfWork.Save();
 
@@ -187,7 +167,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool RoomExists(int id)
         {
-            //return _context.Rooms.Any(e => e.Id == id);
             return _unitOfWork.RoomRepository.IsExists(id).Result;
         }
     }

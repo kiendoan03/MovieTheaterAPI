@@ -17,13 +17,11 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        //private readonly MovieTheaterDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public MoviesController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            //_context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,7 +30,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
-            //var movies = await _context.Movies.ToListAsync();
             var movies = await _unitOfWork.MovieRepository.GetAll();
            
             return _mapper.Map<List<MovieDTO>>(movies);
@@ -42,7 +39,6 @@ namespace MovieTheaterAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDTO>> GetMovie(int id)
         {
-            //var movie = await _context.Movies.FindAsync(id);
             var movie = await _unitOfWork.MovieRepository.GetById(id);
 
             if (movie == null)
@@ -62,23 +58,14 @@ namespace MovieTheaterAPI.Controllers
             {
                 return BadRequest();
             }
-            //var movieExists = await _context.Movies
-            //    .Include(m => m.MovieGenres)
-            //    .Include(m => m.MovieDirectors)
-            //    .Include(m => m.MovieCasts)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
 
             var movieExists = await _unitOfWork.MovieRepository.GetMovieWithFk(id);
 
             _mapper.Map(movie, movieExists);
-            //movieExists = _mapper.Map<Movie>(movie);
-
-            //_context.Entry(movieExists).State = EntityState.Modified;
             await _unitOfWork.MovieRepository.Update(movieExists);
 
             try
             {
-                //await _context.SaveChangesAsync();
                 await _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -103,8 +90,7 @@ namespace MovieTheaterAPI.Controllers
         {
             var newMovie = _mapper.Map<Movie>(movie);
             
-            //_context.Movies.Add(newMovie);
-            //await _context.SaveChangesAsync();
+           
             await _unitOfWork.MovieRepository.Add(newMovie);
             await _unitOfWork.Save();
 
@@ -115,15 +101,13 @@ namespace MovieTheaterAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
-            //var movie = await _context.Movies.FindAsync(id); 
             var movie = await _unitOfWork.MovieRepository.GetById(id);
             if (movie == null)
             {
                 return NotFound();
             }
 
-            //_context.Movies.Remove(movie);
-            //await _context.SaveChangesAsync();
+            
             await _unitOfWork.MovieRepository.Delete(movie);
             await _unitOfWork.Save();
 
@@ -132,7 +116,6 @@ namespace MovieTheaterAPI.Controllers
 
         private bool MovieExists(int id)
         {
-            //return _context.Movies.Any(e => e.Id == id);
             return _unitOfWork.MovieRepository.IsExists(id).Result;
         }
     }
