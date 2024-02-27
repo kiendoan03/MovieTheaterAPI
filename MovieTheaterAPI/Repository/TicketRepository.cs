@@ -22,7 +22,7 @@ namespace MovieTheaterAPI.Repository
 
         public async Task<List<Ticket>> GetTicketToBooking()
         {
-            return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == 2).ToListAsync();
+            return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == 1).ToListAsync();
         }
     }
 }

@@ -51,34 +51,34 @@ namespace MovieTheaterAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CustomerAddress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("CustomerBirthdate")
+                    b.Property<DateOnly?>("DOB")
                         .HasColumnType("date");
 
-                    b.Property<string>("CustomerEmail")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerImage")
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerPassword")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerPhone")
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerUsername")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -357,34 +357,30 @@ namespace MovieTheaterAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("StaffAddress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("StaffDOB")
+                    b.Property<DateOnly?>("DOB")
                         .HasColumnType("date");
 
-                    b.Property<string>("StaffEmail")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffImage")
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffImg")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffName")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StaffPhone")
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -392,7 +388,7 @@ namespace MovieTheaterAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffUsername")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

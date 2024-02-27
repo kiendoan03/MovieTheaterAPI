@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieTheaterAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,14 +31,14 @@ namespace MovieTheaterAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerUsername = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerBirthdate = table.Column<DateOnly>(type: "date", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DOB = table.Column<DateOnly>(type: "date", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +79,6 @@ namespace MovieTheaterAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Rating = table.Column<double>(type: "float", nullable: true),
@@ -98,17 +97,17 @@ namespace MovieTheaterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "RoomTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoomCapacity = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
+                    table.PrimaryKey("PK_RoomTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,16 +130,15 @@ namespace MovieTheaterAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StaffRole = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffUsername = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffDOB = table.Column<DateOnly>(type: "date", nullable: false),
-                    StaffAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffImg = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DOB = table.Column<DateOnly>(type: "date", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,6 +218,26 @@ namespace MovieTheaterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoomTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Rooms_RoomTypes_RoomTypeId",
+                        column: x => x.RoomTypeId,
+                        principalTable: "RoomTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Schedules",
                 columns: table => new
                 {
@@ -227,9 +245,9 @@ namespace MovieTheaterAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
-                    ScheduleDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    StartTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeOnly>(type: "time", nullable: false)
+                    ScheduleDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: true),
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -284,7 +302,7 @@ namespace MovieTheaterAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SeatId = table.Column<int>(type: "int", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    FinalPrice = table.Column<int>(type: "int", nullable: false),
+                    FinalPrice = table.Column<int>(type: "int", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: true),
                     StaffId = table.Column<int>(type: "int", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false)
@@ -330,6 +348,11 @@ namespace MovieTheaterAPI.Migrations
                 name: "IX_MovieGenres_MovieId",
                 table: "MovieGenres",
                 column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rooms_RoomTypeId",
+                table: "Rooms",
+                column: "RoomTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_MovieId",
@@ -416,6 +439,9 @@ namespace MovieTheaterAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "SeatTypes");
+
+            migrationBuilder.DropTable(
+                name: "RoomTypes");
         }
     }
 }

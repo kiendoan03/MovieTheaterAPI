@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace MovieTheaterAPI.Controllers
 
         // GET: api/Casts
         [HttpGet]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<CastDTO>>> GetCasts()
         {
             var casts = await _unitOfWork.CastRepository.GetAll();

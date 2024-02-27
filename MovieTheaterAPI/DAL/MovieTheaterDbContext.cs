@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.DTOs;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace MovieTheaterAPI.DAL
 
@@ -29,6 +30,8 @@ namespace MovieTheaterAPI.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Genres)
                 .WithMany(g => g.Movies)

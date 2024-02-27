@@ -62,6 +62,7 @@ namespace MovieTheaterAPI.Controllers
             var movieExists = await _unitOfWork.MovieRepository.GetMovieWithFk(id);
 
             _mapper.Map(movie, movieExists);
+            //var movieExists = _mapper.Map<Movie>(movie);
             await _unitOfWork.MovieRepository.Update(movieExists);
 
             try
@@ -90,7 +91,7 @@ namespace MovieTheaterAPI.Controllers
         {
             var newMovie = _mapper.Map<Movie>(movie);
             
-           
+            
             await _unitOfWork.MovieRepository.Add(newMovie);
             await _unitOfWork.Save();
 

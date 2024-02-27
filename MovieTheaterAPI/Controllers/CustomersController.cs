@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
+using System.Security.Claims;
 
 namespace MovieTheaterAPI.Controllers
 {
@@ -83,7 +87,8 @@ namespace MovieTheaterAPI.Controllers
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerDTO>> PostCustomer(CustomerDTO customer)
+        [Route("registration")]
+        public async Task<ActionResult<CustomerDTO>> Registration(CustomerDTO customer)
         {
             var newCustomer = _mapper.Map<Customer>(customer);
            
@@ -91,6 +96,21 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.Save();
 
             return CreatedAtAction("GetCustomer", new { id = newCustomer.Id }, newCustomer);
+        }
+
+        [HttpGet]
+        [Route("login")]
+        public async Task<ActionResult<CustomerDTO>> Login(string Username, string password)
+        {
+            var customer = await _unitOfWork.CustomerRepository.Login(Username, password);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            var token = GenerateJwtToken(customer);
+            var cusDTO = _mapper.Map<CustomerDTO>(customer);
+            cusDTO.Token = token;
+            return Ok(cusDTO);
         }
 
         // DELETE: api/Customers/5
@@ -107,6 +127,20 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.Save();
 
             return NoContent();
+        }
+
+        private string GenerateJwtToken(Customer customer)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("super secret key");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", customer.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         private bool CustomerExists(int id)
