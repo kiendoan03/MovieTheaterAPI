@@ -89,7 +89,7 @@ namespace MovieTheaterAPI.Controllers
             var movie = await _unitOfWork.MovieRepository.GetById(schedule.MovieId);
             var length = movie.Length;
             int startMinutes = newSchedule.StartTime?.Hour * 60 + newSchedule.StartTime?.Minute ?? 0;
-            int endMinutes = startMinutes + length;
+            int endMinutes = startMinutes + length + 15;
             int endHour = endMinutes / 60;
             int endMinute = endMinutes % 60;
             var endTime = new TimeOnly(endHour, endMinute);
