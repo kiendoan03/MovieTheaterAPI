@@ -16,6 +16,7 @@ namespace MovieTheaterAPI.DTOs
         public string Language { get; set; } = null!;
         public string Country { get; set; } = null!;
         public string Synopsis { get; set; } = null!;
+        public int Length { get; set; }
         public string Poster { get; set; } = null!;
         public string Thumbnail { get; set; } = null!;
         public string Logo { get; set; } = null!;

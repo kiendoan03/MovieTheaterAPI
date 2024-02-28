@@ -85,6 +85,20 @@ namespace MovieTheaterAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        [Route("get-tickets-ordering")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering()
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering();
+            if(tickets == null)
+            {
+                   return NotFound();
+            }
+            var ticketDTOs = _mapper.Map<List<TicketDTO>>(tickets);
+           
+            return ticketDTOs;
+        }
+
         [HttpPut("update-multiple")]
         public async Task<IActionResult> BookingTickets()
         {

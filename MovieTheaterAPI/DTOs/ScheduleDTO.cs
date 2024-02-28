@@ -7,7 +7,9 @@ namespace MovieTheaterAPI.DTOs
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
+        //public MovieDTO? Movie { get; }
         public int RoomId { get; set; }
+        //public RoomDTO? Room { get; }
         [DataType(DataType.Date)]
         public string? ScheduleDate { get; set; }
         [DataType(DataType.Time)]
@@ -15,7 +17,7 @@ namespace MovieTheaterAPI.DTOs
         public string? StartTime { get; set; }
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
-        public string? EndTime { get; set; }
+        public string? EndTime { get;}
         public List<SeatDTO> Seats { get;  } = [];
         public List<TicketDTO> Tickets { get;} = [];
     }

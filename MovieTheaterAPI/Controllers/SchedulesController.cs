@@ -28,10 +28,10 @@ namespace MovieTheaterAPI.Controllers
 
         // GET: api/Schedules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedules()
+        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
         {
-            var schedules = await _unitOfWork.ScheduleRepository.GetAll();
-            return _mapper.Map<List<ScheduleDTO>>(schedules);
+            var schedules = await _unitOfWork.ScheduleRepository.GetSchedulesDetails();
+            return Ok(schedules);
         }
 
         // GET: api/Schedules/5
@@ -85,6 +85,26 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<ScheduleDTO>> PostSchedule(ScheduleDTO schedule)
         {
             var newSchedule = _mapper.Map<Schedule>(schedule);
+
+            var movie = await _unitOfWork.MovieRepository.GetById(schedule.MovieId);
+            var length = movie.Length;
+            int startMinutes = newSchedule.StartTime?.Hour * 60 + newSchedule.StartTime?.Minute ?? 0;
+            int endMinutes = startMinutes + length;
+            int endHour = endMinutes / 60;
+            int endMinute = endMinutes % 60;
+            var endTime = new TimeOnly(endHour, endMinute);
+            newSchedule.EndTime = endTime;
+
+            var existingSchedules = await _unitOfWork.ScheduleRepository.GetSchedulesByDateAndRoom(newSchedule.RoomId, newSchedule.ScheduleDate);
+            foreach (var existingSchedule in existingSchedules)
+            {
+                if (newSchedule.StartTime >= existingSchedule.StartTime && newSchedule.StartTime < existingSchedule.EndTime ||
+                    newSchedule.EndTime > existingSchedule.StartTime && newSchedule.EndTime <= existingSchedule.EndTime)
+                {
+                    return BadRequest("Schedule conflicts with existing schedules");
+                }
+            }
+
             await _unitOfWork.ScheduleRepository.Add(newSchedule);
             await _unitOfWork.Save();
 
@@ -103,7 +123,7 @@ namespace MovieTheaterAPI.Controllers
                 await _unitOfWork.Save();
             }
 
-            return CreatedAtAction("GetSchedule", new { id = newSchedule.Id }, newSchedule);
+            return CreatedAtAction("GetSchedule", new { id = newSchedule.Id }, schedule);
         }
 
         // DELETE: api/Schedules/5
@@ -122,9 +142,24 @@ namespace MovieTheaterAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        [Route("get-schedules-by-movie")]
+        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedulesByMovie(int movieId)
+        {
+            var schedules = await _unitOfWork.ScheduleRepository.GetSchedulesByMovie(movieId);
+            if (schedules == null)
+            {
+                return NotFound();
+            }
+            return Ok(schedules);
+        }
+
+
         private bool ScheduleExists(int id)
         {
             return _unitOfWork.ScheduleRepository.IsExists(id).Result;
         }
+
+
     }
 }

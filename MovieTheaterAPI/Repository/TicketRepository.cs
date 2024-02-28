@@ -20,6 +20,14 @@ namespace MovieTheaterAPI.Repository
             return await _context.Tickets.Where(x => x.ScheduleId == scheduleId).ToListAsync();
         }
 
+        public async Task<IEnumerable<Ticket>> GetTicketsOrdering()
+        {
+            return await _context.Tickets
+                .Include(x => x.Seats)
+                .Where(x => x.status == 1).Where(y => y.CustomerId == 1)
+                .ToListAsync();
+        }
+
         public async Task<List<Ticket>> GetTicketToBooking()
         {
             return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == 1).ToListAsync();

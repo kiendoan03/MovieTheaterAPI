@@ -7,5 +7,6 @@ namespace MovieTheaterAPI.Repository
         Task<List<Ticket>> GetTicketToBooking();
         Task<IEnumerable<Ticket>> GetTicketsBySchedule(int scheduleId);
         Task<IEnumerable<Ticket>> GetTicketsByCustomer(int customerId);
+        Task<IEnumerable<Ticket>> GetTicketsOrdering();
     }
 }

@@ -115,6 +115,81 @@ namespace MovieTheaterAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        [Route("get-movies-by-genre")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByGenre(int genreId)
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMoviesByGenre(genreId);
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
+        [HttpGet]
+        [Route("get-movie-details")]
+        public async Task<ActionResult<MovieDTO>> GetMovieDetails(int id)
+        {
+            var movie = await _unitOfWork.MovieRepository.GetMovieDetails(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map<MovieDTO>(movie);
+        }
+
+        [HttpGet]
+        [Route("get-movies-showing")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesShowing()
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMoviesShowing();
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
+        [HttpGet]
+        [Route("get-top-movies")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetTopMovies()
+        {
+            var movies = await _unitOfWork.MovieRepository.GetTopMovies();
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
+        [HttpGet]
+        [Route("get-movies-end")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesEnd()
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMoviesEnd();
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
+        [HttpGet]
+        [Route("get-movies-upcoming")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesUpcoming()
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMoviesUpcoming();
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
+
         private bool MovieExists(int id)
         {
             return _unitOfWork.MovieRepository.IsExists(id).Result;
