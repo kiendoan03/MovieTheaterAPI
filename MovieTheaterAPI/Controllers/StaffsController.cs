@@ -94,7 +94,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.StaffRepository.Add(newStaff);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetStaff", new { id = newStaff.Id }, newStaff);
+            return CreatedAtAction("GetStaff", new { id = newStaff.Id }, staff);
         }
 
         [HttpGet]

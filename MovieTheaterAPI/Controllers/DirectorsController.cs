@@ -91,7 +91,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.DirectorRepository.Add(newDirector);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetDirector", new { id = newDirector.Id }, newDirector);
+            return CreatedAtAction("GetDirector", new { id = newDirector.Id }, director);
         }
 
         // DELETE: api/Directors/5

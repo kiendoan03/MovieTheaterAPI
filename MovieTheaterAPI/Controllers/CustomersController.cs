@@ -95,7 +95,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.CustomerRepository.Add(newCustomer);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetCustomer", new { id = newCustomer.Id }, newCustomer);
+            return CreatedAtAction("GetCustomer", new { id = newCustomer.Id }, customer);
         }
 
         [HttpGet]

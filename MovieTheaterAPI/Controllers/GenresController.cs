@@ -90,7 +90,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.GenreRepository.Add(new_genre);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetGenre", new { id = new_genre.Id }, new_genre);
+            return CreatedAtAction("GetGenre", new { id = new_genre.Id }, genre);
         }
 
         // DELETE: api/Genres/5

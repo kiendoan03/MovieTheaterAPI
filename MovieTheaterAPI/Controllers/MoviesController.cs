@@ -95,7 +95,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.MovieRepository.Add(newMovie);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetMovie", new { id = newMovie.Id }, newMovie);
+            return CreatedAtAction("GetMovie", new { id = newMovie.Id }, movie);
         }
 
         // DELETE: api/Movies/5

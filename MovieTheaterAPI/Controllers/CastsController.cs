@@ -50,6 +50,20 @@ namespace MovieTheaterAPI.Controllers
             return _mapper.Map<CastDTO>(cast);
         }
 
+        [HttpGet]
+        [Route("get-movie-by-cast")]
+        public async Task<ActionResult<IEnumerable<CastDTO>>> GetMovieByCast(int castId)
+        {
+            var movies = await _unitOfWork.CastRepository.GetMovieByCast(castId);
+            if(movies == null)
+            {
+                return NotFound();
+            }
+            var movieDTOs = _mapper.Map<List<CastDTO>>(movies);
+            
+            return movieDTOs;
+        }
+
         // PUT: api/Casts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -93,7 +107,7 @@ namespace MovieTheaterAPI.Controllers
             await _unitOfWork.CastRepository.Add(newCast);
             await _unitOfWork.Save();
 
-            return CreatedAtAction("GetCast", new { id = newCast.Id }, newCast);
+            return CreatedAtAction("GetCast", new { id = newCast.Id }, cast);
         }
 
         // DELETE: api/Casts/5

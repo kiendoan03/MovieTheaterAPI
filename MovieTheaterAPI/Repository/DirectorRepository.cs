@@ -1,4 +1,5 @@
-﻿using MovieTheaterAPI.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.Entities;
 
 namespace MovieTheaterAPI.Repository

@@ -147,7 +147,7 @@ namespace MovieTheaterAPI.Controllers
             }
            
                 
-            return CreatedAtAction("GetRoom", new { id = newRoom.Id }, newRoom);
+            return CreatedAtAction("GetRoom", new { id = newRoom.Id }, room);
         }
 
         // DELETE: api/Rooms/5
