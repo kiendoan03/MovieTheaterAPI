@@ -10,6 +10,7 @@ using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Controllers
 {
@@ -17,102 +18,162 @@ namespace MovieTheaterAPI.Controllers
     [ApiController]
     public class DirectorsController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IDirectorService _directorService;
 
-        public DirectorsController(IMapper mapper, IUnitOfWork unitOfWork)
+        public DirectorsController(IDirectorService directorService)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _directorService = directorService;
         }
 
-        // GET: api/Directors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
-            var directors = await _unitOfWork.DirectorRepository.GetAll();
-            return _mapper.Map<List<DirectorDTO>>(directors);
+            var directors = await _directorService.GetAllDirectors();
+            return Ok(directors);
         }
 
-        // GET: api/Directors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DirectorDTO>> GetDirector(int id)
         {
-            var director = await _unitOfWork.DirectorRepository.GetById(id);
-
+            var director = await _directorService.GetDirectorById(id);
             if (director == null)
             {
                 return NotFound();
             }
-
-            return _mapper.Map<DirectorDTO>(director);
+            return Ok(director);
         }
 
-        // PUT: api/Directors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDirector(int id, DirectorDTO director)
-        {
-            if (id != director.Id)
-            {
-                return BadRequest();
-            }
-
-            var updatedDirector = _mapper.Map<Director>(director);
-
-            await _unitOfWork.DirectorRepository.Update(updatedDirector);
-
-            try
-            {
-                await _unitOfWork.Save();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (DirectorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Directors
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<DirectorDTO>> PostDirector(DirectorDTO director)
         {
-            var newDirector = _mapper.Map<Director>(director);
-            
-            await _unitOfWork.DirectorRepository.Add(newDirector);
-            await _unitOfWork.Save();
-
-            return CreatedAtAction("GetDirector", new { id = newDirector.Id }, director);
+            var newDirector = await _directorService.CreateDirector(director);
+            return CreatedAtAction(nameof(GetDirector), new { id = newDirector.Id }, newDirector);
         }
 
-        // DELETE: api/Directors/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDirector(int id, DirectorDTO director)
+        {
+            try
+            {
+                await _directorService.UpdateDirector(id, director);
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Id mismatch");
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDirector(int id)
         {
-            var director = await _unitOfWork.DirectorRepository.GetById(id);
-            if (director == null)
-            {
-                return NotFound();
-            }
-
-            await _unitOfWork.DirectorRepository.Delete(director);
-            await _unitOfWork.Save();
-
+            await _directorService.DeleteDirector(id);
             return NoContent();
         }
-
-        private bool DirectorExists(int id)
-        {
-            return _unitOfWork.DirectorRepository.IsExists(id).Result;
-        }
     }
+
+
+
+    /*    [Route("api/[controller]")]
+        [ApiController]
+        public class DirectorsController : ControllerBase
+        {
+            private readonly IUnitOfWork _unitOfWork;
+            private readonly IMapper _mapper;
+
+            public DirectorsController(IMapper mapper, IUnitOfWork unitOfWork)
+            {
+                _mapper = mapper;
+                _unitOfWork = unitOfWork;
+            }
+
+            // GET: api/Directors
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
+            {
+                var directors = await _unitOfWork.DirectorRepository.GetAll();
+                return _mapper.Map<List<DirectorDTO>>(directors);
+            }
+
+            // GET: api/Directors/5
+            [HttpGet("{id}")]
+            public async Task<ActionResult<DirectorDTO>> GetDirector(int id)
+            {
+                var director = await _unitOfWork.DirectorRepository.GetById(id);
+
+                if (director == null)
+                {
+                    return NotFound();
+                }
+
+                return _mapper.Map<DirectorDTO>(director);
+            }
+
+            // PUT: api/Directors/5
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPut("{id}")]
+            public async Task<IActionResult> PutDirector(int id, DirectorDTO director)
+            {
+                if (id != director.Id)
+                {
+                    return BadRequest();
+                }
+
+                var updatedDirector = _mapper.Map<Director>(director);
+
+                await _unitOfWork.DirectorRepository.Update(updatedDirector);
+
+                try
+                {
+                    await _unitOfWork.Save();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (DirectorExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+
+            // POST: api/Directors
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPost]
+            public async Task<ActionResult<DirectorDTO>> PostDirector(DirectorDTO director)
+            {
+                var newDirector = _mapper.Map<Director>(director);
+
+                await _unitOfWork.DirectorRepository.Add(newDirector);
+                await _unitOfWork.Save();
+
+                return CreatedAtAction("GetDirector", new { id = newDirector.Id }, director);
+            }
+
+            // DELETE: api/Directors/5
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> DeleteDirector(int id)
+            {
+                var director = await _unitOfWork.DirectorRepository.GetById(id);
+                if (director == null)
+                {
+                    return NotFound();
+                }
+
+                await _unitOfWork.DirectorRepository.Delete(director);
+                await _unitOfWork.Save();
+
+                return NoContent();
+            }
+
+            private bool DirectorExists(int id)
+            {
+                return _unitOfWork.DirectorRepository.IsExists(id).Result;
+            }
+        }*/
 }

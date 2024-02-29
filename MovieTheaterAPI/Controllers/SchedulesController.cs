@@ -10,10 +10,70 @@ using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Services;
+using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
+     public class SchedulesController : ControllerBase
+     {
+        private readonly IScheduleService _scheduleService;
+
+        public SchedulesController(IScheduleService scheduleService)
+        {
+            _scheduleService = scheduleService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedules()
+        {
+            var schedules = await _scheduleService.GetAllSchedules();
+            return Ok(schedules);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ScheduleDTO>> GetSchedule(int id)
+        {
+            var schedule = await _scheduleService.GetScheduleById(id);
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+            return Ok(schedule);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ScheduleDTO>> PostSchedule(ScheduleDTO schedule)
+        {
+            var newSchedule = await _scheduleService.CreateSchedule(schedule);
+            return CreatedAtAction(nameof(GetSchedule), new { id = newSchedule.Id }, newSchedule);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutSchedule(int id, ScheduleDTO schedule)
+        {
+            try
+            {
+                await _scheduleService.UpdateSchedule(id, schedule);
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Id mismatch");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSchedule(int id)
+        {
+            await _scheduleService.DeleteSchedule(id);
+            return NoContent();
+        }
+     }
+
+/*    [Route("api/[controller]")]
     [ApiController]
     public class SchedulesController : ControllerBase
     {
@@ -161,5 +221,5 @@ namespace MovieTheaterAPI.Controllers
         }
 
 
-    }
+    }*/
 }

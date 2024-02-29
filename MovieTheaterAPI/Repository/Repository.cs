@@ -24,12 +24,6 @@ namespace MovieTheaterAPI.Repository
            await Task.Run(() => _dbSet.Remove(entity));
         }
 
-
-        public async Task Detached(T entity)
-        {
-            _context.Entry(entity).State = EntityState.Detached;
-        }
-
         public Task<bool> IsExists(int id)
         {
             return _dbSet.FindAsync(id) != null ? Task.FromResult(true) : Task.FromResult(false);
