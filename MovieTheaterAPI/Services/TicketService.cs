@@ -54,14 +54,14 @@ namespace MovieTheaterAPI.Services
         public async Task OrderTicket(int id)
         {
             var existingTicket = await _unitOfWork.TicketRepository.GetById(id);
-
+            var customerId = 1;
             if (existingTicket == null)
             {
                 throw new ArgumentException("Ticket not found.");
             }
 
             existingTicket.status = existingTicket.status == 0 ? 1 : (existingTicket.status == 1 ? 0 : throw new ArgumentException("Seat has already been reserved"));
-            existingTicket.CustomerId = 1; // Assuming there's a customer ID associated with the order.
+            existingTicket.CustomerId = existingTicket.status == 0 ? null : customerId;
 
             await _unitOfWork.TicketRepository.Update(existingTicket);
             await _unitOfWork.Save();
