@@ -1,5 +1,6 @@
 ﻿using MovieTheaterAPI.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieTheaterAPI.DTOs
 {
@@ -17,7 +18,8 @@ namespace MovieTheaterAPI.DTOs
         public string? StartTime { get; set; }
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
-        public string? EndTime { get; }
+        [JsonIgnore]
+        public string? EndTime { get; set; } 
         public List<SeatDTO> Seats { get;  } = [];
         public List<TicketDTO> Tickets { get;} = [];
     }
