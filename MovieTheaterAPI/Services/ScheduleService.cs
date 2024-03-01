@@ -121,7 +121,7 @@ namespace MovieTheaterAPI.Services
             var checkTickets = await _unitOfWork.TicketRepository.CheckTicket(schedule.Id);
                 if (!checkTickets.Any())
                 {
-                    //var oldSchedule = await _unitOfWork.ScheduleRepository.GetById(schedule.Id);
+                  /*  //var oldSchedule = await _unitOfWork.ScheduleRepository.GetById(schedule.Id);
 
                     //if (oldSchedule.RoomId == schedule.RoomId)
                     //{
@@ -129,7 +129,8 @@ namespace MovieTheaterAPI.Services
                     //    await _unitOfWork.Save();
                     //}
                     //else
-                    //{
+                    //{*/
+
                         var tickets = await _unitOfWork.TicketRepository.GetTicketsBySchedule(schedule.Id);
                         foreach (var ticket in tickets)
                         {
