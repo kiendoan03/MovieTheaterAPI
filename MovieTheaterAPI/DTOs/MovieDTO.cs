@@ -8,9 +8,12 @@ namespace MovieTheaterAPI.DTOs
         public int Id { get; set; }
         public string MovieName { get; set; } = null!;
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public string? ReleaseDate { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public string? EndDate { get; set; }
+        [Range(0, 10)]
         public double? Rating { get; set; }
         public string Trailer { get; set; } = null!;
         public string Language { get; set; } = null!;
