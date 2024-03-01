@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
-using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Repository.Interfaces;
 using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Services

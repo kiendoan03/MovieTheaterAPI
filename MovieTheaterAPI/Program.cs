@@ -6,6 +6,7 @@ using MovieTheaterAPI.Repository;
 using MovieTheaterAPI.Services.Interfaces;
 using MovieTheaterAPI.Services;
 using Swashbuckle.AspNetCore.Filters;
+using MovieTheaterAPI.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

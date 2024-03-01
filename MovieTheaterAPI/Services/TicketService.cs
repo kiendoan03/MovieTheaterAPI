@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MovieTheaterAPI.Entities;
-using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Repository.Interfaces;
 using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Services

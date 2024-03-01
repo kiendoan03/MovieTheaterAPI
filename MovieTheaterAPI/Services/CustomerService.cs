@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
-using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Repository.Interfaces;
 using MovieTheaterAPI.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

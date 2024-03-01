@@ -1,6 +1,6 @@
 ﻿using MovieTheaterAPI.Entities;
 
-namespace MovieTheaterAPI.Repository
+namespace MovieTheaterAPI.Repository.Interfaces
 {
     public interface ICastRepository : IRepository<Cast>
     {

@@ -2,6 +2,7 @@
 using MovieTheaterAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MovieTheaterAPI.Repository.Interfaces;
 
 namespace MovieTheaterAPI.Repository
 {

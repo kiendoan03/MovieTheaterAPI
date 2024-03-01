@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
-using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Repository.Interfaces;
 using MovieTheaterAPI.Services.Interfaces;
 using System.Security.AccessControl;
 

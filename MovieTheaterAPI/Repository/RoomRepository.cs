@@ -1,5 +1,6 @@
 ﻿using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.Entities;
+using MovieTheaterAPI.Repository.Interfaces;
 
 namespace MovieTheaterAPI.Repository
 {
