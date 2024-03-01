@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,72 @@ using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Services;
+using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
+    public class StaffsController : ControllerBase
+    {
+        private readonly IStaffService _staffService;
+
+        public StaffsController(IStaffService staffService)
+        {
+            _staffService = staffService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<StaffDTO>>> GetStaffs()
+        {
+            var staffs = await _staffService.GetAllStaffs();
+            return Ok(staffs);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StaffDTO>> GetStaff(int id)
+        {
+            var staff = await _staffService.GetStaffById(id);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+            return Ok(staff);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<StaffDTO>> PostStaff(StaffDTO staff)
+        {
+            var newStaff = await _staffService.CreateStaff(staff);
+            return CreatedAtAction(nameof(GetStaff), new { id = newStaff.Id }, newStaff);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutStaff(int id, StaffDTO staff)
+        {
+            try
+            {
+                await _staffService.UpdateStaff(id, staff);
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Id mismatch");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStaff(int id)
+        {
+            await _staffService.DeleteStaff(id);
+            return NoContent();
+        }
+
+
+    }
+
+/*    [Route("api/[controller]")]
     [ApiController]
     public class StaffsController : ControllerBase
     {
@@ -145,5 +208,5 @@ namespace MovieTheaterAPI.Controllers
         {
             return _unitOfWork.StaffRepository.IsExists(id).Result;
         }
-    }
+    }*/
 }

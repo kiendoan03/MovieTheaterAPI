@@ -6,12 +6,88 @@ using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
+using MovieTheaterAPI.Services.Interfaces;
 
 namespace MovieTheaterAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class TicketsController : ControllerBase
+    {
+        private readonly ITicketService _ticketService;
+
+        public TicketsController(ITicketService ticketService)
+        {
+            _ticketService = ticketService;
+        }
+
+        [HttpGet]
+        [Route("get-tickets-by-customer")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer(int customerId)
+        {
+            var tickets = await _ticketService.GetTicketsByCustomer(customerId);
+            if (tickets == null)
+            {
+                return NotFound();
+            }
+            return Ok(tickets);
+        }
+
+        [HttpGet]
+        [Route("get-tickets-by-schedule")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets(int scheduleId)
+        {
+            var tickets = await _ticketService.GetTicketsBySchedule(scheduleId);
+            if (tickets == null)
+            {
+                return NotFound();
+            }
+            return Ok(tickets);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> OrderTicket(int id)
+        {
+            try
+            {
+                await _ticketService.OrderTicket(id);
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("get-tickets-ordering")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering()
+        {
+            var tickets = await _ticketService.GetTicketsOrdering();
+            if (tickets == null)
+            {
+                return NotFound();
+            }
+            return Ok(tickets);
+        }
+
+        [HttpPut("update-multiple")]
+        public async Task<IActionResult> BookingTickets()
+        {
+            try
+            {
+                await _ticketService.BookingTickets();
+                return NoContent();
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+    }
+
+/*    public class TicketsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -129,5 +205,5 @@ namespace MovieTheaterAPI.Controllers
         {
             return _unitOfWork.TicketRepository.IsExists(id).Result;
         }
-    }
+    }*/
 }
