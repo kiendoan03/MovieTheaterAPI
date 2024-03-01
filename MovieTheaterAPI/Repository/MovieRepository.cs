@@ -11,6 +11,13 @@ namespace MovieTheaterAPI.Repository
         {
         }
 
+        public async Task<IEnumerable<Movie>> GetMovieByDirector(int directorId)
+        {
+            return await _context.Movies
+                .Where(m => m.Directors.Any(d => d.Id == directorId))
+                .ToListAsync();
+        }
+
         public async Task<Movie> GetMovieDetails(int id)
         {
             return await _context.Movies

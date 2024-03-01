@@ -38,6 +38,12 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<List<MovieDTO>>(movies);
         }
 
+        public async Task<IEnumerable<MovieDTO>> GetMovieByDirector(int directorId)
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMovieByDirector(directorId);
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
         public async Task<MovieDTO> GetMovieById(int id)
         {
             var movie = await _unitOfWork.MovieRepository.GetById(id);

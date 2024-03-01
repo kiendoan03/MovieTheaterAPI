@@ -8,9 +8,11 @@ namespace MovieTheaterAPI.DTOs
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
-        //public MovieDTO? Movie { get; }
+        [JsonIgnore]
+        public MovieDTO? Movie { get; set; }
         public int RoomId { get; set; }
-        //public RoomDTO? Room { get; }
+        [JsonIgnore]
+        public RoomDTO? Room { get; set; } 
         [DataType(DataType.Date)]
         public string? ScheduleDate { get; set; }
         [DataType(DataType.Time)]

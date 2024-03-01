@@ -144,6 +144,18 @@ namespace MovieTheaterAPI.Controllers
             }
             return Ok(movies);
         }
+
+        [HttpGet]
+        [Route("get-movies-by-director")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByDirector(int directorId)
+        {
+            var movies = await _movieService.GetMovieByDirector(directorId);
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return Ok(movies);
+        }
     }
 
     /*    [Route("api/[controller]")]

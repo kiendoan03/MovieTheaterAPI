@@ -71,6 +71,30 @@ namespace MovieTheaterAPI.Controllers
             await _scheduleService.DeleteSchedule(id);
             return NoContent();
         }
+
+        [HttpGet]
+        [Route("get-schedules-by-movie")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByMovie(int movieId)
+        {
+            var schedules = await _scheduleService.GetSchedulesByMovie(movieId);
+            if (schedules == null)
+            {
+                return NotFound();
+            }
+            return Ok(schedules);
+        }
+
+        [HttpGet]
+        [Route("get-schedules-with-movie-room")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesWithMovieRoom()
+        {
+            var schedules = await _scheduleService.GetSchedulesWithMovieRoom();
+            if (schedules == null)
+            {
+                return NotFound();
+            }
+            return Ok(schedules);
+        }
      }
 
 /*    [Route("api/[controller]")]

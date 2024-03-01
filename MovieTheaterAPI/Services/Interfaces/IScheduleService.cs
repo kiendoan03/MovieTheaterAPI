@@ -11,5 +11,6 @@ namespace MovieTheaterAPI.Services.Interfaces
         Task<ScheduleDTO> CreateSchedule(ScheduleDTO scheduleDTO);
         Task DeleteSchedule(int id);
         Task<IEnumerable<ScheduleDTO>> GetSchedulesByMovie(int movieId);
+        Task<IEnumerable<ScheduleDTO>> GetSchedulesWithMovieRoom();
     }
 }

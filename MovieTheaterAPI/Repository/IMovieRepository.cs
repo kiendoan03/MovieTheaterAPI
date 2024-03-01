@@ -10,5 +10,7 @@ namespace MovieTheaterAPI.Repository
         Task<IEnumerable<Movie>> GetTopMovies();
         Task<IEnumerable<Movie>> GetMoviesEnd();
         Task<IEnumerable<Movie>> GetMoviesUpcoming();
+        Task<IEnumerable<Movie>> GetMovieByDirector(int directorId);
+
     }
 }
