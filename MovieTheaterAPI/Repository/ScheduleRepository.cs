@@ -18,6 +18,15 @@ namespace MovieTheaterAPI.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Schedule>> GetSchedulesByDateAndRoomExceptOne(int roomId, DateOnly scheduleDate, int exceptScheduleId)
+        {
+            var schedules = await _context.Schedules
+                .Where(s => s.RoomId == roomId && s.ScheduleDate == scheduleDate && s.Id != exceptScheduleId)
+                .ToListAsync();
+
+            return schedules;
+        }
+
         public async Task<IEnumerable<Schedule>> GetSchedulesByMovie(int movieId)
         {
             var schedules = from s in _context.Schedules
