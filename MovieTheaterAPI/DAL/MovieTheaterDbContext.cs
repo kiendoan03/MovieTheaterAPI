@@ -2,11 +2,12 @@
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.DTOs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace MovieTheaterAPI.DAL
 
 {
-    public class MovieTheaterDbContext : DbContext
+    public class MovieTheaterDbContext : IdentityDbContext<User , IdentityRole<int>, int>
     {
         public MovieTheaterDbContext(DbContextOptions<MovieTheaterDbContext> options) : base(options)
         {
@@ -30,7 +31,7 @@ namespace MovieTheaterAPI.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Genres)
@@ -87,6 +88,29 @@ namespace MovieTheaterAPI.DAL
                 .HasMany(s => s.Tickets)
                 .WithOne(t => t.Staff)
                 .HasForeignKey(t => t.StaffId);
+            modelBuilder.Entity<IdentityRole<int>>().ToTable("AspNetRoles");
+            List<IdentityRole<int>> roles = new List<IdentityRole<int>>
+            {
+                new IdentityRole<int>
+                {
+                    Id = 1,
+                    Name = "Staff",
+                    NormalizedName = "STAFF"
+                },
+                 new IdentityRole<int>
+                {
+                    Id = 2,
+                    Name = "Manager",
+                    NormalizedName = "MANAGER"
+                },
+                new IdentityRole<int>
+                {
+                    Id = 3,
+                    Name = "Customer",
+                    NormalizedName = "CUSTOMER"
+                },
+            };
+            modelBuilder.Entity<IdentityRole<int>>().HasData(roles);
         }
         //public DbSet<MovieTheaterAPI.DTOs.MovieDTO> MovieDTO { get; set; } = default!;
     }

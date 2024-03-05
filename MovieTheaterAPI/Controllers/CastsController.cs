@@ -29,6 +29,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize (Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<CastDTO>>> GetCasts()
         {
             var casts = await _castService.GetAll();

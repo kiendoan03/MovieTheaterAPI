@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize (Roles = "Staff")]
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
             var directors = await _directorService.GetAllDirectors();

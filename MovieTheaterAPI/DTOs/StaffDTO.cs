@@ -5,7 +5,7 @@ namespace MovieTheaterAPI.DTOs
 {
     public class StaffDTO : UserDTO
     {
-        public string StaffRole { get; set; } = null!;
+        public int StaffRole { get; set; } 
         public ICollection<TicketDTO>? Tickets { get;  } = new List<TicketDTO>();
     }
 }

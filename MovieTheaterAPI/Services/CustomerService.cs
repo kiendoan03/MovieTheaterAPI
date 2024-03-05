@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.IdentityModel.Tokens;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
@@ -15,11 +18,19 @@ namespace MovieTheaterAPI.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        //private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly UserManager<User> _userManager;
+        private readonly ITokenService _tokenService;
+        //private readonly SignInManager<User> _signinManager;
 
-        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            //_passwordHasher = passwordHasher;
+            _userManager = userManager;
+            _tokenService = tokenService;
+            //_signinManager = signInManager;
         }
 
         public async Task<IEnumerable<CustomerDTO>> GetAllCustomers()
@@ -34,27 +45,51 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<CustomerDTO>(customer);
         }
 
-        public async Task<CustomerDTO> Register(CustomerDTO customer)
+        public async Task<CustomerDTO> Register([FromBody] CustomerDTO customer)
         {
             var newCustomer = _mapper.Map<Customer>(customer);
-            await _unitOfWork.CustomerRepository.Add(newCustomer);
-            await _unitOfWork.Save();
-            return _mapper.Map<CustomerDTO>(newCustomer);
-        }
+            /*//newCustomer.PasswordHash = _passwordHasher.HashPassword(newCustomer, customer.PasswordHash);
+            //newCustomer.SecurityStamp = System.Guid.NewGuid().ToString();
+            //newCustomer.NormalizedEmail = newCustomer.Email.ToUpper();
+            //newCustomer.NormalizedUserName = newCustomer.UserName.ToUpper();
+            //await _unitOfWork.CustomerRepository.Add(newCustomer);
+            //await _unitOfWork.Save();
+            //return _mapper.Map<CustomerDTO>(newCustomer);*/
 
-        public async Task<CustomerDTO> Login(string username, string password)
-        {
-            var customer = await _unitOfWork.CustomerRepository.Login(username, password);
-            if (customer == null)
+            var createdUser = await _userManager.CreateAsync(newCustomer, customer.PasswordHash);
+            if(!createdUser.Succeeded)
             {
-                return null;
+                throw new AccessViolationException("User creation failed");
             }
-
-            var token = GenerateJwtToken(customer);
-            var cusDTO = _mapper.Map<CustomerDTO>(customer);
-            cusDTO.Token = token;
-            return cusDTO;
+            else
+            {
+               var role = await _userManager.AddToRoleAsync(newCustomer, "Customer");
+                if (!role.Succeeded)
+                {
+                    throw new AccessViolationException("Role creation failed");
+                }
+                else
+                {
+                    var cusDTO = _mapper.Map<CustomerDTO>(newCustomer);
+                    cusDTO.Token = await _tokenService.CreateTokenAsync(newCustomer);
+                    return cusDTO;
+                }
+            }
         }
+
+        //public async Task<CustomerDTO> Login(string username, string password)
+        //{
+        //    var customer = await _unitOfWork.CustomerRepository.Login(username, password);
+        //    if (customer == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var token = GenerateJwtToken(customer);
+        //    var cusDTO = _mapper.Map<CustomerDTO>(customer);
+        //    cusDTO.Token = token;
+        //    return cusDTO;
+        //}
 
         public async Task UpdateCustomer(int id, CustomerDTO customer)
         {
@@ -75,19 +110,19 @@ namespace MovieTheaterAPI.Services
             await _unitOfWork.Save();
         }
 
-        private string GenerateJwtToken(Customer customer)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("super secret key");
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", customer.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        //private string GenerateJwtToken(Customer customer)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes("super secret key");
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[] { new Claim("id", customer.Id.ToString()) }),
+        //        Expires = DateTime.UtcNow.AddDays(7),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+        //}
     }
 
 }

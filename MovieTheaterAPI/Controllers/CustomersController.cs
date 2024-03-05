@@ -52,20 +52,20 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<CustomerDTO>> Registration(CustomerDTO customer)
         {
             var newCustomer = await _customerService.Register(customer);
-            return CreatedAtAction(nameof(GetCustomer), new { id = newCustomer.Id }, newCustomer);
+            return Ok(newCustomer);
         }
 
-        [HttpGet]
-        [Route("login")]
-        public async Task<ActionResult<CustomerDTO>> Login(string username, string password)
-        {
-            var customer = await _customerService.Login(username, password);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return Ok(customer);
-        }
+        //[HttpGet]
+        //[Route("login")]
+        //public async Task<ActionResult<CustomerDTO>> Login(string username, string password)
+        //{
+        //    var customer = await _customerService.Login(username, password);
+        //    if (customer == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(customer);
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, CustomerDTO customer)

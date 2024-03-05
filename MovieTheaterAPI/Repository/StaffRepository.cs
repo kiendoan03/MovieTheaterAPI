@@ -10,9 +10,9 @@ namespace MovieTheaterAPI.Repository
         public StaffRepository(MovieTheaterDbContext context) : base(context)
         {
         }
-        public async Task<Staff> Login(string username, string password)
-        {
-            return await _context.Staffs.FirstOrDefaultAsync(x => x.Username == username && x.Password == password);
-        }
+        //public async Task<Staff> Login(string username, string password)
+        //{
+        //    return await _context.Staffs.FirstOrDefaultAsync(x => x.Username == username && x.Password == password);
+        //}
     }
 }
