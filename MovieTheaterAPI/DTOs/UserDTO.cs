@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieTheaterAPI.DTOs
 {
@@ -18,7 +19,7 @@ namespace MovieTheaterAPI.DTOs
         [DataType(DataType.Date)]
         public string DOB { get; set; }
         public string Address { get; set; } = null!;
+        [JsonIgnore]
         public string? Token { get; set; }
-        public string? Role { get; set; }
     }
 }

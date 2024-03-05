@@ -95,19 +95,22 @@ namespace MovieTheaterAPI.DAL
                 {
                     Id = 1,
                     Name = "Staff",
-                    NormalizedName = "STAFF"
+                    NormalizedName = "STAFF",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
                 },
                  new IdentityRole<int>
                 {
                     Id = 2,
                     Name = "Manager",
-                    NormalizedName = "MANAGER"
+                    NormalizedName = "MANAGER",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
                 },
                 new IdentityRole<int>
                 {
                     Id = 3,
                     Name = "Customer",
-                    NormalizedName = "CUSTOMER"
+                    NormalizedName = "CUSTOMER",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
                 },
             };
             modelBuilder.Entity<IdentityRole<int>>().HasData(roles);
