@@ -30,6 +30,7 @@ namespace MovieTheaterAPI.Services
              
             return new UserDTO
             {
+                Id = user.Id,
                 Username = user.UserName,
                 Email = user.Email,
                 Token = await _tokenService.CreateTokenAsync(user),

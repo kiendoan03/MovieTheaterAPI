@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +25,9 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-customer")]
-        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer(int customerId)
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            var tickets = await _ticketService.GetTicketsByCustomer(customerId);
+            var tickets = await _ticketService.GetTicketsByCustomer(httpContextAccessor);
             if (tickets == null)
             {
                 return NotFound();
@@ -47,11 +48,12 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> OrderTicket(int id)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> OrderTicket(int id, [FromServices] IHttpContextAccessor httpContextAccessor)
         {
             try
             {
-                await _ticketService.OrderTicket(id);
+                await _ticketService.OrderTicket(id, httpContextAccessor);
                 return NoContent();
             }
             catch (ArgumentException)
@@ -62,9 +64,9 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-ordering")]
-        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering()
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            var tickets = await _ticketService.GetTicketsOrdering();
+            var tickets = await _ticketService.GetTicketsOrdering(httpContextAccessor);
             if (tickets == null)
             {
                 return NotFound();
@@ -73,11 +75,12 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("update-multiple")]
-        public async Task<IActionResult> BookingTickets()
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             try
             {
-                await _ticketService.BookingTickets();
+                await _ticketService.BookingTickets(httpContextAccessor);
                 return NoContent();
             }
             catch (InvalidOperationException e)

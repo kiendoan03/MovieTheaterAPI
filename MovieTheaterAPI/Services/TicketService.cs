@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository.Interfaces;
 using MovieTheaterAPI.Services.Interfaces;
@@ -16,9 +18,9 @@ namespace MovieTheaterAPI.Services
             _mapper = mapper;
         }
 
-        public async Task BookingTickets()
+        public async Task BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking();
+            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking(httpContextAccessor);
             if (bookTickets == null || !bookTickets.Any())
             {
                 throw new InvalidOperationException("No tickets found for booking.");
@@ -33,9 +35,9 @@ namespace MovieTheaterAPI.Services
             await _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer(int customerId)
+        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetTicketsByCustomer(customerId);
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsByCustomer(httpContextAccessor);
             return tickets;
         }
 
@@ -45,26 +47,30 @@ namespace MovieTheaterAPI.Services
             return tickets;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsOrdering()
+        public async Task<IEnumerable<Ticket>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering();
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering(httpContextAccessor);
             return tickets;
         }
 
-        public async Task OrderTicket(int id)
+        public async Task OrderTicket(int id, [FromServices] IHttpContextAccessor httpContextAccessor)
         {
             var existingTicket = await _unitOfWork.TicketRepository.GetById(id);
-            var customerId = 1;
-            if (existingTicket == null)
+            var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
-                throw new ArgumentException("Ticket not found.");
+                var customerId = userId;
+                if (existingTicket == null)
+                {
+                    throw new ArgumentException("Ticket not found.");
+                }
+
+                existingTicket.status = existingTicket.status == 0 ? 1 : (existingTicket.status == 1 ? 0 : throw new ArgumentException("Seat has already been reserved"));
+                existingTicket.CustomerId = existingTicket.status == 0 ? null : customerId;
+
+                await _unitOfWork.TicketRepository.Update(existingTicket);
+                await _unitOfWork.Save();
             }
-
-            existingTicket.status = existingTicket.status == 0 ? 1 : (existingTicket.status == 1 ? 0 : throw new ArgumentException("Seat has already been reserved"));
-            existingTicket.CustomerId = existingTicket.status == 0 ? null : customerId;
-
-            await _unitOfWork.TicketRepository.Update(existingTicket);
-            await _unitOfWork.Save();
         }
     }
 }

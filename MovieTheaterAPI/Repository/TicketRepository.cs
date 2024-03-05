@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository.Interfaces;
@@ -20,9 +21,17 @@ namespace MovieTheaterAPI.Repository
             return tickets;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer(int customerId)
+        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            return await _context.Tickets.Where(x => x.CustomerId == customerId).Where(y => y.status == 2).ToListAsync();
+            var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return await _context.Tickets.Where(x => x.CustomerId == userId).Where(y => y.status == 2).ToListAsync();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("Invalid user");
+            }
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsBySchedule(int scheduleId)
@@ -30,17 +39,35 @@ namespace MovieTheaterAPI.Repository
             return await _context.Tickets.Where(x => x.ScheduleId == scheduleId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsOrdering()
+        public async Task<IEnumerable<Ticket>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            return await _context.Tickets
-                .Include(x => x.Seats)
-                .Where(x => x.status == 1).Where(y => y.CustomerId == 1)
-                .ToListAsync();
+            var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return await _context.Tickets
+                    .Include(x => x.Seats)
+                    .Where(x => x.status == 1).Where(y => y.CustomerId == userId)
+                    .ToListAsync();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("Invalid user");
+            }
+
+                
         }
 
-        public async Task<List<Ticket>> GetTicketToBooking()
+        public async Task<List<Ticket>> GetTicketToBooking([FromServices] IHttpContextAccessor httpContextAccessor)
         {
-            return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == 1).ToListAsync();
+            var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == userId).ToListAsync();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("Invalid user");
+            }
         }
     }
 }
