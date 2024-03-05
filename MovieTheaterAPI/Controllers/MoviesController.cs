@@ -13,6 +13,7 @@ using MovieTheaterAPI.Repository;
 using MovieTheaterAPI.Services.Interfaces;
 using Humanizer.Localisation;
 using MovieTheaterAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieTheaterAPI.Controllers
 {
@@ -28,6 +29,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
             var movies = await _movieService.GetAllMovies();
@@ -35,6 +37,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<MovieDTO>> GetMovie(int id)
         {
             var movie = await _movieService.GetMovieById(id);
@@ -46,6 +49,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<MovieDTO>> PostMovie(MovieDTO movie)
         {
             var newMovie = await _movieService.CreateMovie(movie);
@@ -53,6 +57,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutMovie(int id, MovieDTO movie)
         {
             try
@@ -67,6 +72,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             await _movieService.DeleteMovie(id);

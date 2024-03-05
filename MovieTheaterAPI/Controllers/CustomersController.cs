@@ -15,6 +15,7 @@ using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository;
 using System.Security.Claims;
 using MovieTheaterAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieTheaterAPI.Controllers
 {
@@ -30,6 +31,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             var customers = await _customerService.GetAllCustomers();
@@ -37,6 +39,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager, Customer")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
             var customer = await _customerService.GetCustomerById(id);
@@ -68,6 +71,7 @@ namespace MovieTheaterAPI.Controllers
         //}
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> PutCustomer(int id, CustomerDTO customer)
         {
             try
@@ -82,6 +86,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             await _customerService.DeleteCustomer(id);

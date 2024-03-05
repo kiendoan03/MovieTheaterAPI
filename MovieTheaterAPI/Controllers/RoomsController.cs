@@ -29,7 +29,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize (Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             var rooms = await _roomService.GetAllRooms();
@@ -37,6 +37,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet ("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
             var room = await _roomService.GetRoomById(id);
@@ -48,6 +49,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO room)
         {
             var newRoom = await _roomService.CreateRoom(room);
@@ -55,6 +57,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutRoom(int id, RoomDTO room)
         {
             try
@@ -69,6 +72,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
             await _roomService.DeleteRoom(id);

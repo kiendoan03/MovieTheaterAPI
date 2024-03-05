@@ -27,7 +27,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Staff")]
+        [Authorize (Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
             var directors = await _directorService.GetAllDirectors();
@@ -35,6 +35,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<DirectorDTO>> GetDirector(int id)
         {
             var director = await _directorService.GetDirectorById(id);
@@ -46,6 +47,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<DirectorDTO>> PostDirector(DirectorDTO director)
         {
             var newDirector = await _directorService.CreateDirector(director);
@@ -53,6 +55,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutDirector(int id, DirectorDTO director)
         {
             try
@@ -67,6 +70,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteDirector(int id)
         {
             await _directorService.DeleteDirector(id);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedules()
         {
             var schedules = await _scheduleService.GetAllSchedules();
@@ -34,6 +36,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<ScheduleDTO>> GetSchedule(int id)
         {
             var schedule = await _scheduleService.GetScheduleById(id);
@@ -45,6 +48,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<ScheduleDTO>> PostSchedule(ScheduleDTO schedule)
         {
             var newSchedule = await _scheduleService.CreateSchedule(schedule);
@@ -52,6 +56,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutSchedule(int id, ScheduleDTO schedule)
         {
             try
@@ -66,6 +71,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
             await _scheduleService.DeleteSchedule(id);
@@ -86,6 +92,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-schedules-with-movie-room")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesWithMovieRoom()
         {
             var schedules = await _scheduleService.GetSchedulesWithMovieRoom();

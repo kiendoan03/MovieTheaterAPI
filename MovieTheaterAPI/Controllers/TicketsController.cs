@@ -13,6 +13,7 @@ namespace MovieTheaterAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize (Roles = "Customer")]
 
     public class TicketsController : ControllerBase
     {
@@ -25,6 +26,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             var tickets = await _ticketService.GetTicketsByCustomer(httpContextAccessor);
@@ -37,6 +39,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-schedule")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets(int scheduleId)
         {
             var tickets = await _ticketService.GetTicketsBySchedule(scheduleId);
@@ -64,6 +67,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-ordering")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             var tickets = await _ticketService.GetTicketsOrdering(httpContextAccessor);
