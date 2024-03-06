@@ -14,7 +14,7 @@ namespace MovieTheaterAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize (Roles = "Customer")]
-        
+
     public class TicketsController : ControllerBase
     {
         private readonly ITicketService _ticketService;
@@ -78,7 +78,8 @@ namespace MovieTheaterAPI.Controllers
             return Ok(tickets);
         }
 
-        [HttpPut("update-multiple")]
+        [HttpPut]
+        [Route("booking-tickets")]
         //[Authorize(Roles = "Customer")]
         public async Task<IActionResult> BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
         {
