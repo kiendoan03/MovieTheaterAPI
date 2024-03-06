@@ -14,7 +14,7 @@ namespace MovieTheaterAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize (Roles = "Customer")]
-
+        
     public class TicketsController : ControllerBase
     {
         private readonly ITicketService _ticketService;
@@ -26,7 +26,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-customer")]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             var tickets = await _ticketService.GetTicketsByCustomer(httpContextAccessor);
@@ -39,7 +39,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-schedule")]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets(int scheduleId)
         {
             var tickets = await _ticketService.GetTicketsBySchedule(scheduleId);
@@ -51,7 +51,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<IActionResult> OrderTicket(int id, [FromServices] IHttpContextAccessor httpContextAccessor)
         {
             try
@@ -67,7 +67,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-ordering")]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             var tickets = await _ticketService.GetTicketsOrdering(httpContextAccessor);
@@ -79,7 +79,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("update-multiple")]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<IActionResult> BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
         {
             try

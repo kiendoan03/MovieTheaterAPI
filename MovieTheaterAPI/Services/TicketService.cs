@@ -62,10 +62,10 @@ namespace MovieTheaterAPI.Services
                 var customerId = userId;
                 if (existingTicket == null)
                 {
-                    throw new ArgumentException("Ticket not found.");
+                    throw new InvalidOperationException("Ticket not found.");
                 }
 
-                existingTicket.status = existingTicket.status == 0 ? 1 : (existingTicket.status == 1 ? 0 : throw new ArgumentException("Seat has already been reserved"));
+                existingTicket.status = existingTicket.status == 0 ? 1 : (existingTicket.status == 1 ? 0 : throw new InvalidOperationException("Seat has already been reserved"));
                 existingTicket.CustomerId = existingTicket.status == 0 ? null : customerId;
 
                 await _unitOfWork.TicketRepository.Update(existingTicket);
