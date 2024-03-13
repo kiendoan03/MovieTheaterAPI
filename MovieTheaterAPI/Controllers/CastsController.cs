@@ -50,24 +50,34 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "Manager")]
-        public async Task<ActionResult<CastDTO>> PostCast(CastDTO cast)
+        public async Task<ActionResult<CastDTO>> PostCast([FromForm] CastDTO cast, IFormFile file)
         {
-            var newCast = await _castService.CreateCast(cast);
+            var newCast = await _castService.CreateCast(cast, file);
             return CreatedAtAction(nameof(GetCast), new { id = newCast.Id }, newCast);
-        }
+        } 
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Manager")]
-        public async Task<IActionResult> PutCast(int id, CastDTO cast)
+        public async Task<IActionResult> PutCast([FromForm] CastDTO cast,int id, IFormFile file)
         {
             if (id != cast.Id)
             {
                 return BadRequest();
             }
 
-            await _castService.Update(cast);
-            return NoContent();
+            await _castService.Update(cast, file);
+            return Ok();
         }
+
+
+        //[HttpGet("GetImage")]
+        //public async Task<IActionResult> GetImage()
+        //{
+        //    string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+           
+        //    return Ok(hosturl);
+
+        //}
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Manager")]

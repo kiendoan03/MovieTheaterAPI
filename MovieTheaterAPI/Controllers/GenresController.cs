@@ -27,7 +27,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Manager, Staff")]
+        //[Authorize (Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
         {
             var genres = await _genreService.GetAllGenres();

@@ -7,7 +7,7 @@ namespace MovieTheaterAPI.Services.Interfaces
     {
         Task<IEnumerable<MovieDTO>> GetAllMovies();
         Task<MovieDTO> GetMovieById(int id);
-        Task<MovieDTO> CreateMovie(MovieDTO movie);
+        Task<MovieDTO> CreateMovie(MovieDTO movie, MovieFiles files);
         Task UpdateMovie(int id, MovieDTO movie);
         Task DeleteMovie(int id);
         Task<IEnumerable<MovieDTO>> GetMoviesByGenre(int genreId);

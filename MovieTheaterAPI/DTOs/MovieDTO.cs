@@ -1,10 +1,12 @@
 ﻿using MovieTheaterAPI.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieTheaterAPI.DTOs
 {
     public class MovieDTO
     {
+        [JsonIgnore]
         public int Id { get; set; }
         public string MovieName { get; set; } = null!;
         [DataType(DataType.Date)]
@@ -15,14 +17,14 @@ namespace MovieTheaterAPI.DTOs
         public string? EndDate { get; set; }
         [Range(0, 10)]
         public double? Rating { get; set; }
-        public string Trailer { get; set; } = null!;
+        public string? Trailer { get; set; }
         public string Language { get; set; } = null!;
         public string Country { get; set; } = null!;
         public string Synopsis { get; set; } = null!;
         public int Length { get; set; }
-        public string Poster { get; set; } = null!;
-        public string Thumbnail { get; set; } = null!;
-        public string Logo { get; set; } = null!;
+        public string? Poster { get; set; } 
+        public string? Thumbnail { get; set; } 
+        public string? Logo { get; set; }
         public int AgeRestricted { get; set; }
         public List<GenreDTO>? Genres { get; } = [];
         public List<DirectorDTO>? Directors { get; } = [];

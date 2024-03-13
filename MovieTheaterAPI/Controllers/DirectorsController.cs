@@ -27,7 +27,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Staff, Manager")]
+        //[Authorize (Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
             var directors = await _directorService.GetAllDirectors();
