@@ -7,7 +7,7 @@ namespace MovieTheaterAPI.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public string Image { get; set; } = null!;
+        public string? Image { get; set; } = null!;
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = null!;
         [MinLength(10), MaxLength(10)]

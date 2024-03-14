@@ -16,6 +16,7 @@ using MovieTheaterAPI.Repository;
 using System.Security.Claims;
 using MovieTheaterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection.Metadata;
 
 namespace MovieTheaterAPI.Controllers
 {
@@ -52,7 +53,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPost]
         //[Route("registration")]
-        public async Task<ActionResult<CustomerDTO>> Registration(CustomerDTO customer)
+        public async Task<ActionResult<CustomerDTO>> Registration([FromForm]CustomerDTO customer)
         {
             var newCustomer = await _customerService.Register(customer);
             return Ok(newCustomer);
@@ -72,18 +73,22 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Customer")]
-        public async Task<IActionResult> PutCustomer(int id, CustomerDTO customer)
+        public async Task<IActionResult> PutCustomer([FromForm] CustomerDTO customer,int id, IFormFile? file)
         {
             try
             {
-                await _customerService.UpdateCustomer(id, customer);
+                if (id != customer.Id)
+                {
+                    return BadRequest();
+                }
+                await _customerService.UpdateCustomer(customer, id, file);
                 return NoContent();
             }
             catch (ArgumentException)
             {
                 return BadRequest("Id mismatch");
             }
-        }
+        }   
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Manager")]

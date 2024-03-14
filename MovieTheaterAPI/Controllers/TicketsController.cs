@@ -13,7 +13,7 @@ namespace MovieTheaterAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize (Roles = "Customer")]
+    //[Authorize (Roles = "Customer")]
 
     public class TicketsController : ControllerBase
     {

@@ -35,7 +35,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<ActionResult<DirectorDTO>> GetDirector(int id)
         {
             var director = await _directorService.GetDirectorById(id);
@@ -47,20 +47,20 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Manager")]
-        public async Task<ActionResult<DirectorDTO>> PostDirector(DirectorDTO director)
+        //[Authorize(Roles = "Manager")]
+        public async Task<ActionResult<DirectorDTO>> PostDirector([FromForm]DirectorDTO director, IFormFile file)
         {
-            var newDirector = await _directorService.CreateDirector(director);
+            var newDirector = await _directorService.CreateDirector(director, file);
             return CreatedAtAction(nameof(GetDirector), new { id = newDirector.Id }, newDirector);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> PutDirector(int id, DirectorDTO director)
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> PutDirector([FromForm] DirectorDTO director,int id, IFormFile? file)
         {
             try
             {
-                await _directorService.UpdateDirector(id, director);
+                await _directorService.UpdateDirector( director,id, file);
                 return NoContent();
             }
             catch (ArgumentException)
@@ -70,7 +70,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteDirector(int id)
         {
             await _directorService.DeleteDirector(id);

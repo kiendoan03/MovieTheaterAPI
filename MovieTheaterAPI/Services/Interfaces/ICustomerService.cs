@@ -10,7 +10,7 @@ namespace MovieTheaterAPI.Services.Interfaces
         Task<CustomerDTO> GetCustomerById(int id);
         Task<CustomerDTO> Register(CustomerDTO customer);
         //Task<CustomerDTO> Login(string username, string password);
-        Task UpdateCustomer(int id, CustomerDTO customer);
+        Task UpdateCustomer(CustomerDTO customer, int id, IFormFile? file);
         Task DeleteCustomer(int id);
     }
 

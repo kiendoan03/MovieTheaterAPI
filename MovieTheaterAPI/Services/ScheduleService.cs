@@ -131,7 +131,7 @@ namespace MovieTheaterAPI.Services
                     //else
                     //{*/
 
-                        var tickets = await _unitOfWork.TicketRepository.GetTicketsBySchedule(schedule.Id);
+                        var tickets = await _unitOfWork.TicketRepository.GetTicketsByScheduleToDelete(schedule.Id);
                         foreach (var ticket in tickets)
                         {
                             await _unitOfWork.TicketRepository.Delete(ticket);

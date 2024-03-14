@@ -7,8 +7,8 @@ namespace MovieTheaterAPI.Services.Interfaces
     {
         Task<IEnumerable<DirectorDTO>> GetAllDirectors();
         Task<DirectorDTO> GetDirectorById(int id);
-        Task<DirectorDTO> CreateDirector(DirectorDTO director);
-        Task UpdateDirector(int id, DirectorDTO director);
+        Task<DirectorDTO> CreateDirector(DirectorDTO director, IFormFile file);
+        Task UpdateDirector( DirectorDTO director,int id, IFormFile? file);
         Task DeleteDirector(int id);
     }
 

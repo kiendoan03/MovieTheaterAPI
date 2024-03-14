@@ -36,7 +36,14 @@ namespace MovieTheaterAPI.Repository
 
         public async Task<IEnumerable<Ticket>> GetTicketsBySchedule(int scheduleId)
         {
-            return await _context.Tickets.Where(x => x.ScheduleId == scheduleId).ToListAsync();
+            return await _context.Tickets
+                .Include(x => x.Seats)
+                .Where(x => x.ScheduleId == scheduleId).ToListAsync();
+        }
+        public async Task<IEnumerable<Ticket>> GetTicketsByScheduleToDelete(int scheduleId)
+        {
+            return await _context.Tickets
+                .Where(x => x.ScheduleId == scheduleId).ToListAsync();
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)

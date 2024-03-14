@@ -59,7 +59,7 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<CastDTO>(newCast);
         }
 
-        public async Task Update(CastDTO castDTO, IFormFile file)
+        public async Task Update(CastDTO castDTO, IFormFile? file)
         {
             var cast = await _unitOfWork.CastRepository.GetById(castDTO.Id);
             if (cast == null)
@@ -85,6 +85,10 @@ namespace MovieTheaterAPI.Services
 
                 // Update cast image path
                 cast.CastImage = "/uploads/images/casts/" + fileName;
+            }
+            else
+            {
+                cast.CastImage = cast.CastImage;
             }
 
             await _unitOfWork.CastRepository.Update(cast);

@@ -99,6 +99,12 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<RoomDTO>(room);
         }
 
+        public async Task<IEnumerable<SeatDTO>> GetSeatsByRoom(int roomId)
+        {
+            var seats = await _unitOfWork.SeatRepository.GetSeatsByRoomId(roomId);
+            return _mapper.Map<List<SeatDTO>>(seats);
+        }
+
         public async Task UpdateRoom(int id, RoomDTO roomDTO)
         {
             if (id != roomDTO.Id)

@@ -58,7 +58,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Manager")]
-        public async Task<IActionResult> PutCast([FromForm] CastDTO cast,int id, IFormFile file)
+        public async Task<IActionResult> PutCast([FromForm] CastDTO cast,int id, IFormFile? file)
         {
             if (id != cast.Id)
             {

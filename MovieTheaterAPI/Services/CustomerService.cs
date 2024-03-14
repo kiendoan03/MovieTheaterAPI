@@ -45,7 +45,7 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<CustomerDTO>(customer);
         }
 
-        public async Task<CustomerDTO> Register([FromBody] CustomerDTO customer)
+        public async Task<CustomerDTO> Register(CustomerDTO customer)
         {
             var newCustomer = _mapper.Map<Customer>(customer);
             /*//newCustomer.PasswordHash = _passwordHasher.HashPassword(newCustomer, customer.PasswordHash);
@@ -55,7 +55,7 @@ namespace MovieTheaterAPI.Services
             //await _unitOfWork.CustomerRepository.Add(newCustomer);
             //await _unitOfWork.Save();
             //return _mapper.Map<CustomerDTO>(newCustomer);*/
-
+            newCustomer.Image = "/uploads/images/customers/avt-default.png";
             var createdUser = await _userManager.CreateAsync(newCustomer, customer.PasswordHash);
             if(!createdUser.Succeeded)
             {
@@ -91,7 +91,7 @@ namespace MovieTheaterAPI.Services
         //    return cusDTO;
         //}
 
-        public async Task UpdateCustomer(int id, CustomerDTO customer)
+        public async Task UpdateCustomer(CustomerDTO customer, int id, IFormFile? file)
         {
             if (id != customer.Id)
             {
@@ -99,6 +99,26 @@ namespace MovieTheaterAPI.Services
             }
 
             var updatedCustomer = _mapper.Map<Customer>(customer);
+
+            if (file != null && file.Length > 0)
+            {
+                var folderName = Path.Combine("wwwroot", "uploads", "images", "customers");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = Guid.NewGuid().ToString() + "_" + updatedCustomer.Name + ".png";
+                var fullPath = Path.Combine(pathToSave, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                updatedCustomer.Image = "/uploads/images/customers/" + fileName;
+            }
+            else
+            {
+                updatedCustomer.Image = updatedCustomer.Image;
+            }
+
             await _unitOfWork.CustomerRepository.Update(updatedCustomer);
             await _unitOfWork.Save();
         }
