@@ -15,7 +15,7 @@ namespace MovieTheaterAPI.DTOs
         public string Username { get; set; } = null!;
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$",
         ErrorMessage = "Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be 8-15 characters long.")]
-        public string PasswordHash { get; set; } = null!;
+        public string? PasswordHash { get; set; } = null!;
         [DataType(DataType.Date)]
         public string DOB { get; set; }
         public string Address { get; set; } = null!;

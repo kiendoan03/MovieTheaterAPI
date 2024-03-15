@@ -32,7 +32,6 @@
     <Folder Include="wwwroot\uploads\images\movies\thumbnails\" />
     <Folder Include="wwwroot\uploads\images\movies\posters\" />
     <Folder Include="wwwroot\uploads\images\staffs\" />
-    <Folder Include="wwwroot\uploads\movieTrailers\" />
   </ItemGroup>
 
 </Project>

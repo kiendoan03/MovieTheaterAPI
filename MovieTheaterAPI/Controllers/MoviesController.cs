@@ -58,11 +58,11 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Manager")]
-        public async Task<IActionResult> PutMovie(int id, MovieDTO movie)
+        public async Task<IActionResult> PutMovie( [FromForm]MovieDTO movie, int id, MovieFiles? files)
         {
             try
             {
-                await _movieService.UpdateMovie(id, movie);
+                await _movieService.UpdateMovie( movie,id,files);
                 return NoContent();
             }
             catch (ArgumentException)
@@ -77,6 +77,14 @@ namespace MovieTheaterAPI.Controllers
         {
             await _movieService.DeleteMovie(id);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("get-movies-with-fk")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesWithFk(int id)
+        {
+            var movies = await _movieService.GetMovieWithFK(id);
+            return Ok(movies);
         }
 
         [HttpGet]

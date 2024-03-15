@@ -7,8 +7,8 @@ namespace MovieTheaterAPI.Services.Interfaces
     {
         Task<IEnumerable<StaffDTO>> GetAllStaffs();
         Task<StaffDTO> GetStaffById(int id);
-        Task<StaffDTO> CreateStaff(StaffDTO staff);
-        Task UpdateStaff(int id, StaffDTO staff);
+        Task<StaffDTO> CreateStaff(StaffDTO staff, IFormFile file);
+        Task UpdateStaff( StaffDTO staff,int id, IFormFile? file);
         Task DeleteStaff(int id);
     }
 }

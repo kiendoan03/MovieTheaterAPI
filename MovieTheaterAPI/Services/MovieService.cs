@@ -154,19 +154,107 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<List<MovieDTO>>(movies);
         }
 
+        public async Task<MovieDTO> GetMovieWithFK(int id)
+        {
+            var movie = await _unitOfWork.MovieRepository.GetMovieWithFk(id);
+            return _mapper.Map<MovieDTO>(movie);
+        }
+
         public async Task<IEnumerable<MovieDTO>> GetTopMovies()
         {
             var movies = await _unitOfWork.MovieRepository.GetTopMovies();
             return _mapper.Map<List<MovieDTO>>(movies);
         }
 
-        public async Task UpdateMovie(int id, MovieDTO movie)
+        public async Task UpdateMovie( MovieDTO movie,int id, MovieFiles? files)
         {
             if (id != movie.Id)
             {
                 throw new ArgumentException("Id is not valid");
             }
             var movieExists = await _unitOfWork.MovieRepository.GetMovieWithFk(id);
+
+            var poster = files.poster;
+            var thumbnail = files.thumbnail;
+            var logo = files.logo;
+            var trailer = files.trailer;
+
+            if(poster != null && poster.Length > 0)
+            {
+                var folderName = Path.Combine("wwwroot", "uploads", "images", "movies", "posters");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = Guid.NewGuid().ToString() + "_" + movie.MovieName + ".png";
+                var fullPath = Path.Combine(pathToSave, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    poster.CopyTo(stream);
+                }
+
+                movie.Poster = "/uploads/images/movies/posters/" + fileName;
+            }
+            else
+            {
+                movie.Poster = movieExists.Poster;
+            }
+
+            if(thumbnail != null && thumbnail.Length > 0)
+            {
+                var folderName = Path.Combine("wwwroot", "uploads", "images", "movies", "thumbnails");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = Guid.NewGuid().ToString() + "_" + movie.MovieName + ".png";
+                var fullPath = Path.Combine(pathToSave, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    thumbnail.CopyTo(stream);
+                }
+
+                movie.Thumbnail = "/uploads/images/movies/thumbnails/" + fileName;
+            }
+            else
+            {
+                movie.Thumbnail = movieExists.Thumbnail;
+            }
+
+            if(logo != null && logo.Length > 0)
+            {
+                var folderName = Path.Combine("wwwroot", "uploads", "images", "movies", "logos");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = Guid.NewGuid().ToString() + "_" + movie.MovieName + ".png";
+                var fullPath = Path.Combine(pathToSave, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    logo.CopyTo(stream);
+                }
+
+                movie.Logo = "/uploads/images/movies/logos/" + fileName;
+            }
+            else
+            {
+                movie.Logo = movieExists.Logo;
+            }
+
+            if(trailer != null && trailer.Length > 0)
+            {
+                var folderName = Path.Combine("wwwroot", "uploads", "movieTrailers");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = Guid.NewGuid().ToString() + "_" + movie.MovieName + ".mp4";
+                var fullPath = Path.Combine(pathToSave, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    trailer.CopyTo(stream);
+                }
+
+                movie.Trailer = "/uploads/videos/movieTrailers/" + fileName;
+            }
+            else
+            {
+                movie.Trailer = movieExists.Trailer;
+            }
+
             _mapper.Map(movie, movieExists);
             await _unitOfWork.MovieRepository.Update(movieExists);
             await _unitOfWork.Save();

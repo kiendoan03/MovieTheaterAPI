@@ -33,7 +33,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<StaffDTO>>> GetStaffs()
         {
             var staffs = await _staffService.GetAllStaffs();
@@ -41,7 +41,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<ActionResult<StaffDTO>> GetStaff(int id)
         {
             var staff = await _staffService.GetStaffById(id);
@@ -53,20 +53,20 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Manager")]
-        public async Task<ActionResult<StaffDTO>> PostStaff(StaffDTO staff)
+        //[Authorize(Roles = "Manager")]
+        public async Task<ActionResult<StaffDTO>> PostStaff([FromForm]StaffDTO staff, IFormFile file)
         {
-            var newStaff = await _staffService.CreateStaff(staff);
+            var newStaff = await _staffService.CreateStaff(staff, file);
             return CreatedAtAction(nameof(GetStaff), new { id = newStaff.Id }, newStaff);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> PutStaff(int id, StaffDTO staff)
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> PutStaff([FromForm] StaffDTO staff,int id, IFormFile? file)
         {
             try
             {
-                await _staffService.UpdateStaff(id, staff);
+                await _staffService.UpdateStaff( staff,id, file);
                 return NoContent();
             }
             catch (ArgumentException)
@@ -76,7 +76,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
             await _staffService.DeleteStaff(id);
