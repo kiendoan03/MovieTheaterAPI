@@ -32,7 +32,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Staff, Manager")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             var customers = await _customerService.GetAllCustomers();
@@ -40,7 +40,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Manager, Customer")]
+        [Authorize(Roles = "Manager, Customer")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
             var customer = await _customerService.GetCustomerById(id);
@@ -52,7 +52,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        //[Route("registration")]
+        [Route("registration")]
         public async Task<ActionResult<CustomerDTO>> Registration([FromForm]CustomerDTO customer)
         {
             var newCustomer = await _customerService.Register(customer);
@@ -72,7 +72,7 @@ namespace MovieTheaterAPI.Controllers
         //}
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> PutCustomer([FromForm] CustomerDTO customer,int id, IFormFile? file)
         {
             try
@@ -91,7 +91,7 @@ namespace MovieTheaterAPI.Controllers
         }   
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             await _customerService.DeleteCustomer(id);

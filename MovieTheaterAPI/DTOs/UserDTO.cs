@@ -21,5 +21,6 @@ namespace MovieTheaterAPI.DTOs
         public string Address { get; set; } = null!;
         [JsonIgnore]
         public string? Token { get; set; }
+        public string? Role { get; set; }
     }
 }

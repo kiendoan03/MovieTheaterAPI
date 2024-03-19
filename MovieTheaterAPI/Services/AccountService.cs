@@ -23,7 +23,7 @@ namespace MovieTheaterAPI.Services
         public async Task<UserDTO> Login([FromBody] LoginDTO loginDTO)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.Username.ToLower());
-            if (user == null) throw new UnauthorizedAccessException("Invalid email");
+            if (user == null) throw new UnauthorizedAccessException("Invalid username");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!result.Succeeded) throw new UnauthorizedAccessException("Invalid password");
@@ -34,6 +34,7 @@ namespace MovieTheaterAPI.Services
                 Username = user.UserName,
                 Email = user.Email,
                 Token = await _tokenService.CreateTokenAsync(user),
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
             };
         }
     }

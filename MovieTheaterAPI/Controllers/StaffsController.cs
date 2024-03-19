@@ -33,7 +33,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Manager, Staff")]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<StaffDTO>>> GetStaffs()
         {
             var staffs = await _staffService.GetAllStaffs();
@@ -41,7 +41,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<StaffDTO>> GetStaff(int id)
         {
             var staff = await _staffService.GetStaffById(id);
@@ -53,7 +53,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<StaffDTO>> PostStaff([FromForm]StaffDTO staff, IFormFile file)
         {
             var newStaff = await _staffService.CreateStaff(staff, file);
@@ -61,7 +61,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutStaff([FromForm] StaffDTO staff,int id, IFormFile? file)
         {
             try
@@ -76,7 +76,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
             await _staffService.DeleteStaff(id);

@@ -29,7 +29,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Staff, Manager")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<ActionResult<IEnumerable<CastDTO>>> GetCasts()
         {
             var casts = await _castService.GetAll();
@@ -37,7 +37,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<CastDTO>> GetCast(int id)
         {
             var cast = await _castService.GetById(id);
@@ -49,7 +49,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<CastDTO>> PostCast([FromForm] CastDTO cast, IFormFile file)
         {
             var newCast = await _castService.CreateCast(cast, file);
@@ -57,7 +57,7 @@ namespace MovieTheaterAPI.Controllers
         } 
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutCast([FromForm] CastDTO cast,int id, IFormFile? file)
         {
             if (id != cast.Id)
@@ -80,7 +80,7 @@ namespace MovieTheaterAPI.Controllers
         //}
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteCast(int id)
         {
             await _castService.Delete(id);

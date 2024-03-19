@@ -29,15 +29,23 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Manager, Staff")]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
             var movies = await _movieService.GetAllMovies();
             return Ok(movies);
         }
 
+        [HttpGet]
+        [Route("get-movies-clients")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesClients()
+        {
+            var movies = await _movieService.GetAllMovies();
+            return Ok(movies);
+        }
+
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<MovieDTO>> GetMovie(int id)
         {
             var movie = await _movieService.GetMovieById(id);
@@ -49,7 +57,7 @@ namespace MovieTheaterAPI.Controllers
         }
          
         [HttpPost]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<MovieDTO>> PostMovie([FromForm]MovieDTO movie, MovieFiles files)
         {
             var newMovie = await _movieService.CreateMovie(movie, files);
@@ -57,7 +65,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutMovie( [FromForm]MovieDTO movie, int id, MovieFiles? files)
         {
             try

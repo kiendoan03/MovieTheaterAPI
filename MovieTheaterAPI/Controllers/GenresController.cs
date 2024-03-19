@@ -27,7 +27,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize (Roles = "Manager, Staff")]
+        [Authorize (Roles = "Manager, Staff")]
         public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
         {
             var genres = await _genreService.GetAllGenres();
@@ -35,7 +35,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<GenreDTO>> GetGenre(int id)
         {
             var genre = await _genreService.GetGenreById(id);
@@ -47,7 +47,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO genre)
         {
             var newGenre = await _genreService.CreateGenre(genre);
@@ -55,7 +55,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutGenre(int id, GenreDTO genre)
         {
             try
@@ -70,7 +70,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
             await _genreService.DeleteGenre(id);
