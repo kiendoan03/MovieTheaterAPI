@@ -39,7 +39,7 @@ namespace MovieTheaterAPI.Services
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
             }
 
-            var audiences = _config.GetSection("JWT:Audie   nce").Get<string[]>();
+            var audiences = _config.GetSection("JWT:Audience").Get<string[]>();
             foreach (var audience in audiences)
             {
                 claims.Add(new Claim("aud", audience));

@@ -26,10 +26,10 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-customer")]
-        [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
+        //[Authorize(Roles = "Customer")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer(int cusId)
         {
-            var tickets = await _ticketService.GetTicketsByCustomer(httpContextAccessor);
+            var tickets = await _ticketService.GetTicketsByCustomer(cusId);
             if (tickets == null)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-by-schedule")]
-        [Authorize(Roles = "Customer, Manager, Staff")]
+        //[Authorize(Roles = "Customer, Manager, Staff")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets(int scheduleId)
         {
             var tickets = await _ticketService.GetTicketsBySchedule(scheduleId);
@@ -51,12 +51,12 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> OrderTicket(int id, [FromServices] IHttpContextAccessor httpContextAccessor)
+        //[Authorize(Roles = "Customer")]
+        public async Task<IActionResult> OrderTicket(int id, int cusId)
         {
             try
             {
-                await _ticketService.OrderTicket(id, httpContextAccessor);
+                await _ticketService.OrderTicket(id, cusId);
                 return NoContent();
             }
             catch (ArgumentException)
@@ -67,10 +67,10 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpGet]
         [Route("get-tickets-ordering")]
-        [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
+        //[Authorize(Roles = "Customer")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsOrdering(int cusId)
         {
-            var tickets = await _ticketService.GetTicketsOrdering(httpContextAccessor);
+            var tickets = await _ticketService.GetTicketsOrdering(cusId);
             if (tickets == null)
             {
                 return NotFound();
@@ -80,12 +80,12 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPut]
         [Route("booking-tickets")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
+        //[Authorize(Roles = "Customer")]
+        public async Task<IActionResult> BookingTickets(int cusId)
         {
             try
             {
-                await _ticketService.BookingTickets(httpContextAccessor);
+                await _ticketService.BookingTickets(cusId);
                 return NoContent();
             }
             catch (InvalidOperationException e)

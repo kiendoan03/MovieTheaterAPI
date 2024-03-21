@@ -18,9 +18,9 @@ namespace MovieTheaterAPI.Services
             _mapper = mapper;
         }
 
-        public async Task BookingTickets([FromServices] IHttpContextAccessor httpContextAccessor)
+        public async Task BookingTickets(int cusId)
         {
-            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking(httpContextAccessor);
+            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking(cusId);
             if (bookTickets == null || !bookTickets.Any())
             {
                 throw new InvalidOperationException("No tickets found for booking.");
@@ -35,9 +35,9 @@ namespace MovieTheaterAPI.Services
             await _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer([FromServices] IHttpContextAccessor httpContextAccessor)
+        public async Task<IEnumerable<Ticket>> GetTicketsByCustomer(int cusId)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetTicketsByCustomer(httpContextAccessor);
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsByCustomer(cusId);
             return tickets;
         }
 
@@ -47,19 +47,19 @@ namespace MovieTheaterAPI.Services
             return tickets;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsOrdering([FromServices] IHttpContextAccessor httpContextAccessor)
+        public async Task<IEnumerable<Ticket>> GetTicketsOrdering(int cusId)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering(httpContextAccessor);
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering(cusId);
             return tickets;
         }
 
-        public async Task OrderTicket(int id, [FromServices] IHttpContextAccessor httpContextAccessor)
+        public async Task OrderTicket(int id, int cusId)
         {
             var existingTicket = await _unitOfWork.TicketRepository.GetById(id);
-            var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
-            {
-                var customerId = userId;
+            //var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            //if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            //{
+                var customerId = cusId;
                 if (existingTicket == null)
                 {
                     throw new InvalidOperationException("Ticket not found.");
@@ -70,7 +70,7 @@ namespace MovieTheaterAPI.Services
 
                 await _unitOfWork.TicketRepository.Update(existingTicket);
                 await _unitOfWork.Save();
-            }
+            //}
         }
     }
 }

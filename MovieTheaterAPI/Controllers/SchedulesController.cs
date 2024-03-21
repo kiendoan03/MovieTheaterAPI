@@ -102,6 +102,20 @@ namespace MovieTheaterAPI.Controllers
             }
             return Ok(schedules);
         }
+
+        [HttpGet]
+        [Route("get-schedule-with-detail")]
+        //[Authorize(Roles = "Customer")]
+        public async Task<ActionResult<ScheduleDTO>> GetScheduleWithDetail(int scheduleId)
+        {
+            var schedules = await _scheduleService.GetScheduleWithDetail(scheduleId);
+            if (schedules == null)
+            {
+                return NotFound();
+            }
+            return Ok(schedules);
+        }
+
      }
 
 /*    [Route("api/[controller]")]
