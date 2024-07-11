@@ -33,6 +33,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<CastDTO>>> GetCasts()
         {
             var casts = await _castService.GetAll();
+            casts = casts.Reverse().ToList();
             return Ok(casts);
         }
 

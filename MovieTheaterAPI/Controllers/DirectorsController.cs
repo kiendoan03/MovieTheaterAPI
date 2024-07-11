@@ -31,6 +31,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
             var directors = await _directorService.GetAllDirectors();
+            directors = directors.Reverse().ToList();
             return Ok(directors);
         }
 

@@ -31,6 +31,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
         {
             var genres = await _genreService.GetAllGenres();
+            genres = genres.Reverse().ToList();
             return Ok(genres);
         }
 

@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: black;
+            color: red;
+            text-align: center;
+            padding: 10px;
+            padding-left: 20px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+            .header h2 {
+                align-items: center;
+                margin: 0;
+            }
+
+        .footer {
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 14px;
+            color: #fff;
+            background-color: black;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+            .footer p {
+                margin: 10px 0;
+                text-align: center;
+            }
+
+        .ticket {
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .ticket-info {
+            margin-bottom: 10px;
+        }
+
+            .ticket-info p {
+                margin: 5px 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>NETFNIX</h2>
+        </div>
+
+        <div class="content">
+            <h2 style="text-align:center">Digital Ticket</h2>
+            <p><strong>Please show this ticket information to check in when you arrive at the theater</strong></p>
+
+            <b>TICKET INFORMATION</b>
+            <p>Movie: @Model.Schedule.Movie.MovieName</p>
+            <p>Theater: Netfnix Vietnam</p>
+            <p>Room: @Model.Schedule.Room.RoomName</p>
+            <p>Showtimes: @Model.Schedule.ScheduleDate @Model.Schedule.StartTime</p>
+
+            @foreach (var ticket in Model.Tickets)
+            {
+                <div class="ticket">
+                    <div class="ticket-info">
+                        <p><strong>Seat:</strong> @GetSeatLabel(ticket.Seats.Row, ticket.Seats.Column)</p>
+                        <p><strong>Price:</strong> @string.Format("{0:N0} VND", ticket.FinalPrice)</p>
+                    </div>
+                </div>
+            }
+
+            <b>Total Amount: @string.Format("{0:N0} VND", Model.TotalPrice)</b>
+
+            <p><strong>Please show this ticket information to check in when you arrive at the theater</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing our service. If you have any questions, please contact us:</p>
+            <b>NETFNIX Cinema Vietnam</b><br>
+            <b>Support email: <a href="#">netfnixvietnam@gmail.com</a></b>
+        </div>
+    </div>
+</body>
+</html>
+
+@functions {
+    // Function to convert row and column to seat label (A1, A2, ...)
+    public string GetSeatLabel(int row, int column)
+    {
+        char rowChar = (char)('A' + row - 1); // Convert row number to character (A, B, C, ...)
+        return $"{rowChar}{column}";
+    }
+}

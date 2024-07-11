@@ -136,8 +136,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 //builder.Services.AddIdentityApiEndpoints<User>()
 //    .AddEntityFrameworkStores<MovieTheaterDbContext>();
-
-
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<ICastService, CastService>();
@@ -151,6 +153,8 @@ builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 
 builder.Services.AddDbContext<MovieTheaterDbContext>(opt =>
 {

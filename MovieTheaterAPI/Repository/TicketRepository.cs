@@ -38,6 +38,7 @@ namespace MovieTheaterAPI.Repository
         {
             return await _context.Tickets
                 .Include(x => x.Seats)
+                .Include(x => x.Customer)
                 .Where(x => x.ScheduleId == scheduleId).ToListAsync();
         }
         public async Task<IEnumerable<Ticket>> GetTicketsByScheduleToDelete(int scheduleId)

@@ -88,7 +88,9 @@ namespace MovieTheaterAPI.Services
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesWithMovieRoom()
         {
             var schedules = await _unitOfWork.ScheduleRepository.GetSchedulesWithMovieRoom();
-            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+            var sortedSchedule = schedules.OrderByDescending(s => s.ScheduleDate); 
+
+            return _mapper.Map<IEnumerable<ScheduleDTO>>(sortedSchedule);
         }
 
         public async Task<ScheduleDTO> GetScheduleWithDetail(int scheduleId)

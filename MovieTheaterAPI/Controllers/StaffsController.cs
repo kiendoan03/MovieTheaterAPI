@@ -37,6 +37,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<StaffDTO>>> GetStaffs()
         {
             var staffs = await _staffService.GetAllStaffs();
+            staffs = staffs.Reverse().ToList();
             return Ok(staffs);
         }
 

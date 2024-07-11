@@ -4,16 +4,17 @@ using Net.payOS.Types;
 using Net.payOS;
 using MovieTheaterAPI.DTOs;
 using System.Linq;
+using MovieTheaterAPI.Services.Interfaces;
 
 public class CheckoutController : Controller
 {
     private readonly PayOS _payOS;
+    private readonly IEmailService _emailService;
 
-
-    public CheckoutController(PayOS payOS)
+    public CheckoutController(PayOS payOS, IEmailService emailService)
     {
         _payOS = payOS;
-
+        _emailService = emailService;
     }
 
     [HttpGet("/")]
@@ -61,4 +62,30 @@ public class CheckoutController : Controller
             return StatusCode(500, "Internal server error");
         }
     }
+    [HttpPost("/payment-success")]
+    public async Task<IActionResult> PaymentSuccess([FromBody] PaymentSuccessPayload payload)
+        {
+        try
+        {
+          /*  // Extract payment information from the payload
+            //var paymentInformation = new PaymentInformation
+            //{
+            //    CustomerEmail = payload.CustomerEmail,
+            //    TotalPrice = payload.TotalPrice,
+            //    Tickets = payload.Tickets
+            //};
+
+            // Send payment confirmation email
+            //await _emailService.SendPaymentConfirmationEmail(paymentInformation.CustomerEmail, paymentInformation);*/
+            await _emailService.SendPaymentConfirmationEmail(payload.CustomerEmail, payload);
+
+            return Ok();
+        }
+        catch (System.Exception exception)
+        {
+            Console.WriteLine(exception);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
 }

@@ -33,6 +33,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             var rooms = await _roomService.GetAllRooms();
+            rooms = rooms.Reverse().ToList();
             return Ok(rooms);
         }
 

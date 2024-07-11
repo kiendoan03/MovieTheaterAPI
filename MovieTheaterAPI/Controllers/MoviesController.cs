@@ -33,6 +33,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
             var movies = await _movieService.GetAllMovies();
+            movies = movies.Reverse().ToList();
             return Ok(movies);
         }
 

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Template</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .ticket-details {
+            margin-bottom: 20px;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-details">
+        <h2>Ticket Details</h2>
+        <p><strong>Seat:</strong> @Model.Seats.Row@Model.Seats.Column</p>
+        <p><strong>Price:</strong> @Model.FinalPrice</p>
+    </div>
+
+    <div class="qr-code">
+        <img src="" alt="QR Code">
+    </div>
+</body>
+</html>

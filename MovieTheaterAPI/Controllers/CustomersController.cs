@@ -36,6 +36,7 @@ namespace MovieTheaterAPI.Controllers
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             var customers = await _customerService.GetAllCustomers();
+            customers = customers.Reverse().ToList();
             return Ok(customers);
         }
 
