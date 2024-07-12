@@ -130,6 +130,11 @@ namespace MovieTheaterAPI.Services
             await _unitOfWork.Save();
         }
 
+        public async Task<int> CountTicketsBought(int id)
+        {
+            return await _unitOfWork.CustomerRepository.CountTicketsBought(id);
+        }
+
         //private string GenerateJwtToken(Customer customer)
         //{
         //    var tokenHandler = new JwtSecurityTokenHandler();

@@ -54,7 +54,7 @@ namespace MovieTheaterAPI.Controllers
 
         [HttpPost]
         [Route("registration")]
-        public async Task<ActionResult<CustomerDTO>> Registration([FromForm]CustomerDTO customer)
+        public async Task<ActionResult<CustomerDTO>> Registration(CustomerDTO customer)
         {
             var newCustomer = await _customerService.Register(customer);
             return Ok(newCustomer);
@@ -71,6 +71,16 @@ namespace MovieTheaterAPI.Controllers
         //    }
         //    return Ok(customer);
         //}
+
+        //count ticket bought by customer
+        [HttpGet]
+        [Route("count-tickets-bought")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<int>> CountTicketsBought(int cusId)
+        {
+            var tickets = await _customerService.CountTicketsBought(cusId);
+            return Ok(tickets);
+        }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Customer")]

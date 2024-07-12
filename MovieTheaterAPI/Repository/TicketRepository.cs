@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.Entities;
 using MovieTheaterAPI.Repository.Interfaces;
+using System.Linq;
 
 namespace MovieTheaterAPI.Repository
 {
@@ -26,7 +27,11 @@ namespace MovieTheaterAPI.Repository
             //var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
             //if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             //{
-                return await _context.Tickets.Where(x => x.CustomerId == cusId).Where(y => y.status == 2).ToListAsync();
+            return await _context.Tickets.Where(x => x.CustomerId == cusId).Where(y => y.status == 2)
+            .Include(x => x.Seats)
+            .Include(x => x.Schedules)
+                .ThenInclude(x => x.Movie)
+            .ToListAsync();
             //}
             //else
             //{

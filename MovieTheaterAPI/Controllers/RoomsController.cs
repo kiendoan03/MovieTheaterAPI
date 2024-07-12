@@ -29,7 +29,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Staff, Manager")]
+        [Authorize (Roles = "Staff, Manager, Customer")]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             var rooms = await _roomService.GetAllRooms();

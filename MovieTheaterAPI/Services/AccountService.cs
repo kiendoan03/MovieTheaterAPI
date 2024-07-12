@@ -32,6 +32,7 @@ namespace MovieTheaterAPI.Services
             {
                 Id = user.Id,
                 Username = user.UserName,
+                Name = user.Name,
                 Email = user.Email,
                 Token = await _tokenService.CreateTokenAsync(user),
                 Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
