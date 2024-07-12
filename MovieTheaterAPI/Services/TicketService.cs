@@ -35,6 +35,12 @@ namespace MovieTheaterAPI.Services
             await _unitOfWork.Save();
         }
 
+        public async Task<int> CountTicketsSold()
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetTicketSold();
+            return tickets.Count();
+        }
+
         public async Task<IEnumerable<Ticket>> GetTicketsByCustomer(int cusId)
         {
             var tickets = await _unitOfWork.TicketRepository.GetTicketsByCustomer(cusId);
@@ -51,6 +57,12 @@ namespace MovieTheaterAPI.Services
         {
             var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering(cusId);
             return tickets;
+        }
+
+        public async Task<int> GetTotalIncome()
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetTicketSold();
+            return (int)tickets.Sum(x => x.FinalPrice);
         }
 
         public async Task OrderTicket(int id, int cusId)

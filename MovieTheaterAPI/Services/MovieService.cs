@@ -17,6 +17,26 @@ namespace MovieTheaterAPI.Services
             _mapper = mapper;
         }
 
+        public async Task<int> CountMovies()
+        {
+            return await _unitOfWork.MovieRepository.Count();
+        }
+
+        public async Task<int> CountMoviesEnd()
+        {
+            return await _unitOfWork.MovieRepository.CountMoviesEnd();
+        }
+
+        public async Task<int> CountMoviesShowing()
+        {
+            return await _unitOfWork.MovieRepository.CountMoviesShowing();
+        }
+
+        public async Task<int> CountMoviesUpcomming()
+        {
+            return await _unitOfWork.MovieRepository.CountMoviesUpcomming();
+        }
+
         public async Task<MovieDTO> CreateMovie(MovieDTO movie, MovieFiles files)
         {
             var newMovie = _mapper.Map<Movie>(movie);

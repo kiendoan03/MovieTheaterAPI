@@ -12,6 +12,37 @@ namespace MovieTheaterAPI.Repository
         {
         }
 
+        public async Task<int> CountMoviesEnd()
+        {
+            var datetime = DateTime.Now;
+            var dateonly = new DateOnly(datetime.Year, datetime.Month, datetime.Day);
+            var movies = from m in _context.Movies
+                         where m.EndDate < dateonly
+                         select m;
+            return await Task.FromResult(movies.Count());
+        }
+
+        public async Task<int> CountMoviesShowing()
+        {
+            var datetime = DateTime.Now;
+            var dateonly = new DateOnly(datetime.Year, datetime.Month, datetime.Day);
+            var movies = from m in _context.Movies
+                         where m.ReleaseDate <= dateonly
+                         where m.EndDate >= dateonly
+                         select m;
+            return await Task.FromResult(movies.Count());
+        }
+
+        public async Task<int> CountMoviesUpcomming()
+        {
+            var datetime = DateTime.Now;
+            var dateonly = new DateOnly(datetime.Year, datetime.Month, datetime.Day);
+            var movies = from m in _context.Movies
+                         where m.ReleaseDate > dateonly
+                         select m;
+            return await Task.FromResult(movies.Count());
+        }
+
         public async Task<IEnumerable<Movie>> GetMovieByDirector(int directorId)
         {
             return await _context.Movies

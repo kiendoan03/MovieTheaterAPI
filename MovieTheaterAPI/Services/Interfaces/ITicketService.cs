@@ -10,5 +10,7 @@ namespace MovieTheaterAPI.Services.Interfaces
         Task OrderTicket(int id, int cusId);
         Task<IEnumerable<Ticket>> GetTicketsOrdering(int cusId);
         Task BookingTickets(int cusId);
+        Task<int> CountTicketsSold();
+        Task<int> GetTotalIncome();
     }
 }

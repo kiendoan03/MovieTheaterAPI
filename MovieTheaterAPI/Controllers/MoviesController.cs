@@ -56,6 +56,44 @@ namespace MovieTheaterAPI.Controllers
             }
             return Ok(movie);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        [Route("count-movie")]
+        public async Task<ActionResult<int>> CountMovie()
+        {
+            var count = await _movieService.CountMovies();
+            return Ok(count);
+        }
+
+        //count movie showing
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        [Route("count-movie-showing")]
+        public async Task<ActionResult<int>> CountMovieShowing()
+        {
+            var count = await _movieService.CountMoviesShowing();
+            return Ok(count);
+        }
+
+        //count movie upcomming
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        [Route("count-movie-upcomming")]
+        public async Task<ActionResult<int>> CountMovieUpcomming()
+        {
+            var count = await _movieService.CountMoviesUpcomming();
+            return Ok(count);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        [Route("count-movie-end")]
+        public async Task<ActionResult<int>> CountMovieEnd()
+        {
+            var count = await _movieService.CountMoviesEnd();
+            return Ok(count);
+        }
          
         [HttpPost]
         [Authorize(Roles = "Manager")]

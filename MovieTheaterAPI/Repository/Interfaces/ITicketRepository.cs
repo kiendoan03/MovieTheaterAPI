@@ -11,5 +11,6 @@ namespace MovieTheaterAPI.Repository.Interfaces
         Task<IEnumerable<Ticket>> GetTicketsByCustomer(int cusId);
         Task<IEnumerable<Ticket>> GetTicketsOrdering(int cusId);
         Task<IEnumerable<Ticket>> CheckTicket(int scheduleId);
+        Task<IEnumerable<Ticket>> GetTicketSold();
     }
 }

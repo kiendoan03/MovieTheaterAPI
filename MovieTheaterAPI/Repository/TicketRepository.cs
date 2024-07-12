@@ -47,6 +47,11 @@ namespace MovieTheaterAPI.Repository
                 .Where(x => x.ScheduleId == scheduleId).ToListAsync();
         }
 
+        public async Task<IEnumerable<Ticket>> GetTicketSold()
+        {
+            return await _context.Tickets.Where(x => x.status == 2).ToListAsync();
+        }
+
         public async Task<IEnumerable<Ticket>> GetTicketsOrdering(int cusId)
         {
             //var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");

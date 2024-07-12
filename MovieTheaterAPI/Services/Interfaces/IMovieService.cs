@@ -18,7 +18,12 @@ namespace MovieTheaterAPI.Services.Interfaces
         Task<IEnumerable<MovieDTO>> GetMoviesEnd();
         Task<IEnumerable<MovieDTO>> GetMoviesUpcoming();
         Task<IEnumerable<MovieDTO>> GetMovieByDirector(int directorId);
-
+        //count movies
+        Task<int> CountMovies();
+        //count movies showing
+        Task<int> CountMoviesShowing();
+        Task<int> CountMoviesUpcomming();
+        Task<int> CountMoviesEnd();
     }
 
 }

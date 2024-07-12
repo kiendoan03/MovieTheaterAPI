@@ -25,6 +25,15 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize (Roles = "Manager")]
+        [Route("count-tickets-sold")]
+        public async Task<ActionResult<int>> CountTicketsSold()
+        {
+            var tickets = await _ticketService.CountTicketsSold();
+            return Ok(tickets);
+        }
+
+        [HttpGet]
         [Route("get-tickets-by-customer")]
         //[Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTicketsByCustomer(int cusId)
@@ -36,6 +45,17 @@ namespace MovieTheaterAPI.Controllers
             }
             return Ok(tickets);
         }
+
+        //total income
+        [HttpGet]
+        [Route("get-total-income")]
+        [Authorize(Roles = "Manager")]
+        public async Task<ActionResult<int>> GetTotalIncome()
+        {
+            var tickets = await _ticketService.GetTotalIncome();
+            return Ok(tickets);
+        }
+
 
         [HttpGet]
         [Route("get-tickets-by-schedule")]

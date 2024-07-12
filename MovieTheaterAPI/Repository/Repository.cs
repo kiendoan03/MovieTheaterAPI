@@ -46,5 +46,10 @@ namespace MovieTheaterAPI.Repository
             _context.Entry(entity).State = EntityState.Modified;
             //_context.Update(entity);
         }
+
+        public async Task<int> Count()
+        {
+            return await _dbSet.CountAsync();
+        }
     }
 }
