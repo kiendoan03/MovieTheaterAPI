@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using MovieTheaterAPI.DAL;
 using MovieTheaterAPI.DTOs;
 using MovieTheaterAPI.Entities;
+using MovieTheaterAPI.Hubs;
 using MovieTheaterAPI.Repository;
 using MovieTheaterAPI.Services.Interfaces;
 
@@ -18,10 +20,12 @@ namespace MovieTheaterAPI.Controllers
     public class TicketsController : ControllerBase
     {
         private readonly ITicketService _ticketService;
+        private readonly IHubContext<BookticketHub> _hubContext;
 
-        public TicketsController(ITicketService ticketService)
+        public TicketsController(ITicketService ticketService, IHubContext<BookticketHub> hubContext)
         {
             _ticketService = ticketService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -77,6 +81,7 @@ namespace MovieTheaterAPI.Controllers
             try
             {
                 await _ticketService.OrderTicket(id, cusId);
+                await _hubContext.Clients.All.SendAsync("orderTicket");
                 return NoContent();
             }
             catch (ArgumentException)
@@ -106,6 +111,7 @@ namespace MovieTheaterAPI.Controllers
             try
             {
                 await _ticketService.BookingTickets(cusId);
+                await _hubContext.Clients.All.SendAsync("bookingTicket");
                 return NoContent();
             }
             catch (InvalidOperationException e)

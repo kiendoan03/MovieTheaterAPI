@@ -147,6 +147,18 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet]
+        [Route("get-movies-by-keywork")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByKeywork(string keyword)
+        {
+            var movies = await _movieService.GetMoviesByKeywork(keyword);
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            return Ok(movies);
+        }
+
+        [HttpGet]
         [Route("get-movie-details")]
         public async Task<ActionResult<MovieDTO>> GetMovieDetails(int id)
         {

@@ -156,6 +156,12 @@ namespace MovieTheaterAPI.Services
             return _mapper.Map<List<MovieDTO>>(movies);
         }
 
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByKeywork(string keyword)
+        {
+            var movies = await _unitOfWork.MovieRepository.GetMoviesByKeywork(keyword);
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
         public async Task<IEnumerable<MovieDTO>> GetMoviesEnd()
         {
             var movies = await _unitOfWork.MovieRepository.GetMoviesEnd();

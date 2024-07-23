@@ -11,6 +11,9 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MovieTheaterAPI.Services
 {
@@ -25,7 +28,7 @@ namespace MovieTheaterAPI.Services
             _viewRenderService = viewRenderService;
         }
 
-        public async Task SendTestEmail(string to, string subject, EmailViewModel model)
+        public async Task SendEmailOtp(string to, string subject, EmailViewModel model)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_configuration["EmailSettings:FromEmail"]));
@@ -69,6 +72,53 @@ namespace MovieTheaterAPI.Services
             await smtp.AuthenticateAsync(_configuration["EmailSettings:FromEmail"], _configuration["EmailSettings:Password"]);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
+        }
+
+        public async Task<string> GenerateEmailOtp(string toEmail)
+        {
+            var _random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var randomString = new string(Enumerable.Repeat(chars, 6)
+                 .Select(s => s[_random.Next(s.Length)]).ToArray());
+            var randomStringEncrypted = await Encrypted(randomString);
+            var emailViewModel = new EmailViewModel
+            {
+                Title = "Email OTP",
+                Content = $"{randomString}"
+            };
+            await SendEmailOtp(toEmail, emailViewModel.Title, emailViewModel);
+            return randomStringEncrypted;
+        }
+
+        public async Task<string> Encrypted(string randomString)
+        {
+            var randomStringEncrypted = "";
+            string EncryptionKey = "";
+            byte[] clearBytes = Encoding.Unicode.GetBytes(randomString);
+            using (Aes encryptor = Aes.Create())
+            {
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(clearBytes, 0, clearBytes.Length);
+                        cs.Close();
+                    }
+                    randomStringEncrypted = Convert.ToHexString(ms.ToArray());
+                }
+            }
+            return randomStringEncrypted;
+        }
+
+        public async Task<bool> VerifyEmailOtp(EmailOtpVerifyInputDto input)
+        {
+            var otpDecrypt = await Encrypted(input.Otp);
+            if (otpDecrypt.Equals(input.StringEncrypted)) return true;
+
+            return false;
         }
 
         //public async Task SendPaymentConfirmationEmail(string to, PaymentSuccessPayload paymentSuccess)

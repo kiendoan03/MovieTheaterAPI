@@ -15,5 +15,7 @@ namespace MovieTheaterAPI.Repository.Interfaces
         Task<int> CountMoviesShowing();
         Task<int> CountMoviesUpcomming();
         Task<int> CountMoviesEnd();
+        //GetMoviesByKeywork
+        Task<IEnumerable<Movie>> GetMoviesByKeywork(string keyword);
     }
 }

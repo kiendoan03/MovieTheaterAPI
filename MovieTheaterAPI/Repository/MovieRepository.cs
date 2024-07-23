@@ -67,6 +67,14 @@ namespace MovieTheaterAPI.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Movie>> GetMoviesByKeywork(string keyword)
+        {
+            var movies = from m in _context.Movies
+                         where m.MovieName.Contains(keyword)
+                         select m;
+            return await Task.FromResult(movies);
+        }
+
         public async Task<IEnumerable<Movie>> GetMoviesEnd()
         {
             var datetime = DateTime.Now;

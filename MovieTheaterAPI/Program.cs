@@ -14,6 +14,7 @@ using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using MovieTheaterAPI.Middleware;
 using Net.payOS;
+using MovieTheaterAPI.Hubs;
 
 IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
@@ -131,6 +132,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 //builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
 //auth  
 builder.Services.AddAuthorization();
@@ -169,7 +171,8 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins("http://localhost:5173", "http://localhost:5174")
                    .AllowAnyHeader()
-                   .AllowAnyMethod();
+                   .AllowAnyMethod()
+                   .AllowCredentials();
         });
 });
 
@@ -186,6 +189,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+
+app.MapHub<BookticketHub>("bookticketHub");
 
 app.UseHttpsRedirection();
 
