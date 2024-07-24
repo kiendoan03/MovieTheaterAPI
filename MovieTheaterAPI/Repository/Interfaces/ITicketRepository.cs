@@ -5,7 +5,7 @@ namespace MovieTheaterAPI.Repository.Interfaces
 {
     public interface ITicketRepository : IRepository<Ticket>
     {
-        Task<List<Ticket>> GetTicketToBooking(int cusId);
+        Task<List<Ticket>> GetTicketToBooking(int cusId, int scheduleId);
         Task<IEnumerable<Ticket>> GetTicketsBySchedule(int scheduleId);
         Task<IEnumerable<Ticket>> GetTicketsByScheduleToDelete(int scheduleId);
         Task<IEnumerable<Ticket>> GetTicketsByCustomer(int cusId);

@@ -41,6 +41,14 @@ namespace MovieTheaterAPI.Controllers
             return Ok(staffs);
         }
 
+        [HttpGet]
+        [Route("check-duplicate-staff")]
+        public async Task<ActionResult<bool>> CheckDuplicateStaff(string username, string email)
+        {
+            var isDuplicate = await _staffService.CheckDuplicateStaff(username, email);
+            return Ok(isDuplicate);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles = "Manager")]
         public async Task<ActionResult<StaffDTO>> GetStaff(int id)
@@ -57,6 +65,11 @@ namespace MovieTheaterAPI.Controllers
         [Authorize(Roles = "Manager")]
         public async Task<ActionResult<StaffDTO>> PostStaff([FromForm]StaffDTO staff, IFormFile file)
         {
+            var checkDuplicate = await _staffService.CheckDuplicateStaff(staff.Username, staff.Email);
+            if (checkDuplicate)
+            {
+                return BadRequest("Username or Email is already existed");
+            }
             var newStaff = await _staffService.CreateStaff(staff, file);
             return CreatedAtAction(nameof(GetStaff), new { id = newStaff.Id }, newStaff);
         }
@@ -67,6 +80,11 @@ namespace MovieTheaterAPI.Controllers
         {
             try
             {
+                var checkDuplicate = await _staffService.CheckDuplicateStaffExcept(staff.Username, staff.Email, id);
+                if (checkDuplicate)
+                {
+                    return BadRequest("Username or Email is already existed");
+                }
                 await _staffService.UpdateStaff( staff,id, file);
                 return NoContent();
             }

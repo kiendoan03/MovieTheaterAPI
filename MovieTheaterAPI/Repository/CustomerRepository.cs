@@ -11,6 +11,26 @@ namespace MovieTheaterAPI.Repository
         {
         }
 
+        public async Task<bool> CheckDuplicateCustomer(string username, string email)
+        {
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.UserName == username || x.Email == email);
+            if (customer == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> CheckDuplicateCustomerExcept(string username, string email, int id)
+        {
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => (x.UserName == username || x.Email == email) && x.Id != id);
+            if (customer == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<int> CountTicketsBought(int id)
         {
             var ticket = await _context.Tickets.Where(x => x.CustomerId == id).Where(y => y.status == 2).ToListAsync();

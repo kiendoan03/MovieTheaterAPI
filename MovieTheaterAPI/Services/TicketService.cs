@@ -18,9 +18,9 @@ namespace MovieTheaterAPI.Services
             _mapper = mapper;
         }
 
-        public async Task BookingTickets(int cusId)
+        public async Task BookingTickets(int cusId, int scheduleId)
         {
-            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking(cusId);
+            var bookTickets = await _unitOfWork.TicketRepository.GetTicketToBooking(cusId, scheduleId);
             if (bookTickets == null || !bookTickets.Any())
             {
                 throw new InvalidOperationException("No tickets found for booking.");
@@ -30,6 +30,27 @@ namespace MovieTheaterAPI.Services
             {
                 ticket.status = 2;
                 await _unitOfWork.TicketRepository.Update(ticket);
+            }
+
+            await _unitOfWork.Save();
+        }
+
+        public async Task CancelTicket(int cusId)
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetTicketsOrdering(cusId);
+            if (tickets == null || !tickets.Any())
+            {
+                throw new InvalidOperationException("No tickets found for canceling.");
+            }
+
+            foreach (var ticket in tickets)
+            {
+                if(ticket.status == 1)
+                {
+                    ticket.status = 0;
+                    ticket.CustomerId = null;
+                    await _unitOfWork.TicketRepository.Update(ticket);
+                }
             }
 
             await _unitOfWork.Save();

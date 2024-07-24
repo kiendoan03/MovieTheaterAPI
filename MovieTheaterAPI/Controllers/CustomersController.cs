@@ -56,8 +56,16 @@ namespace MovieTheaterAPI.Controllers
         [Route("registration")]
         public async Task<ActionResult<CustomerDTO>> Registration(CustomerDTO customer)
         {
-            var newCustomer = await _customerService.Register(customer);
-            return Ok(newCustomer);
+            var checkDuplicate = await _customerService.CheckDuplicateCustomer(customer.Username, customer.Email);
+            if(checkDuplicate)
+            {
+                return BadRequest("Username or Email is already existed");
+            }
+            else
+            {
+                var newCustomer = await _customerService.Register(customer);
+                return Ok(newCustomer);
+            }
         }
 
         //[HttpGet]
@@ -82,6 +90,14 @@ namespace MovieTheaterAPI.Controllers
             return Ok(tickets);
         }
 
+        [HttpGet]
+        [Route("check-duplicate-customer")]
+        public async Task<ActionResult<bool>> CheckDuplicateCustomer(string username, string email)
+        {
+            var isDuplicate = await _customerService.CheckDuplicateCustomer(username, email);
+            return Ok(isDuplicate);
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> PutCustomer([FromForm] CustomerDTO customer,int id, IFormFile? file)
@@ -91,6 +107,11 @@ namespace MovieTheaterAPI.Controllers
                 if (id != customer.Id)
                 {
                     return BadRequest();
+                }
+                var checkDuplicate = await _customerService.CheckDuplicateCustomerExcept(customer.Username, customer.Email, id);
+                if (checkDuplicate)
+                {
+                    return BadRequest("Username or Email is already existed");
                 }
                 await _customerService.UpdateCustomer(customer, id, file);
                 return NoContent();

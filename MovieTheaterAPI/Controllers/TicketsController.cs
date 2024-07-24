@@ -90,6 +90,22 @@ namespace MovieTheaterAPI.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("cancel-ticket")]
+        public async Task<IActionResult> CancelTicket(int cusId)
+        {
+            try
+            {
+                await _ticketService.CancelTicket(cusId);
+                await _hubContext.Clients.All.SendAsync("cancelTicket");
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpGet]
         [Route("get-tickets-ordering")]
         //[Authorize(Roles = "Customer")]
@@ -106,11 +122,11 @@ namespace MovieTheaterAPI.Controllers
         [HttpPut]
         [Route("booking-tickets")]
         //[Authorize(Roles = "Customer")]
-        public async Task<IActionResult> BookingTickets(int cusId)
+        public async Task<IActionResult> BookingTickets(int cusId, int scheduleId)
         {
             try
             {
-                await _ticketService.BookingTickets(cusId);
+                await _ticketService.BookingTickets(cusId, scheduleId);
                 await _hubContext.Clients.All.SendAsync("bookingTicket");
                 return NoContent();
             }

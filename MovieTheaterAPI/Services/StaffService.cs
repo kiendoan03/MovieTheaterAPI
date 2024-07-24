@@ -24,6 +24,16 @@ namespace MovieTheaterAPI.Services
             _userManager = userManager;
         }
 
+        public async Task<bool> CheckDuplicateStaff(string username, string email)
+        {
+            return await _unitOfWork.StaffRepository.CheckDuplicateStaff(username, email);
+        }
+
+        public async Task<bool> CheckDuplicateStaffExcept(string username, string email, int id)
+        {
+            return await _unitOfWork.StaffRepository.CheckDuplicateStaffExcept(username, email, id);
+        }
+
         public async Task<StaffDTO> CreateStaff(StaffDTO staff, IFormFile file)
         {
             var newStaff = _mapper.Map<Staff>(staff);

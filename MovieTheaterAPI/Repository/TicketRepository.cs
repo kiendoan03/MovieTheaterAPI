@@ -75,12 +75,12 @@ namespace MovieTheaterAPI.Repository
                 
         }
 
-        public async Task<List<Ticket>> GetTicketToBooking(int cusId)
+        public async Task<List<Ticket>> GetTicketToBooking(int cusId, int scheduleId)
         {
             //var userIdClaim = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
             //if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             //{
-                return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == cusId).ToListAsync();
+                return await _context.Tickets.Where(x => x.status == 1).Where(y => y.CustomerId == cusId).Where(s => s.ScheduleId == scheduleId).ToListAsync();
             //}
             //else
             //{

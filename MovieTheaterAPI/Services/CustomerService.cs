@@ -91,36 +91,81 @@ namespace MovieTheaterAPI.Services
         //    return cusDTO;
         //}
 
+        //public async Task UpdateCustomer(CustomerDTO customer, int id, IFormFile? file)
+        //{
+        //    if (id != customer.Id)
+        //    {
+        //        throw new ArgumentException("Id mismatch");
+        //    }
+
+        //    var updatedCustomer = _mapper.Map<Customer>(customer);
+
+        //    if (file != null && file.Length > 0)
+        //    {
+        //        var folderName = Path.Combine("wwwroot", "uploads", "images", "customers");
+        //        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //        var fileName = Guid.NewGuid().ToString() + "_" + updatedCustomer.Name + ".png";
+        //        var fullPath = Path.Combine(pathToSave, fileName);
+
+        //        using (var stream = new FileStream(fullPath, FileMode.Create))
+        //        {
+        //            file.CopyTo(stream);
+        //        }
+
+        //        updatedCustomer.Image = "/uploads/images/customers/" + fileName;
+        //    }
+        //    else
+        //    {
+        //        updatedCustomer.Image = updatedCustomer.Image;
+        //    }
+
+        //    await _unitOfWork.CustomerRepository.Update(updatedCustomer);
+        //    await _unitOfWork.Save();
+        //}
+
         public async Task UpdateCustomer(CustomerDTO customer, int id, IFormFile? file)
         {
             if (id != customer.Id)
-            {
-                throw new ArgumentException("Id mismatch");
-            }
-
-            var updatedCustomer = _mapper.Map<Customer>(customer);
+              {
+               throw new ArgumentException("Id mismatch");
+              }
+            var oldCus = await _unitOfWork.CustomerRepository.GetById(id);
 
             if (file != null && file.Length > 0)
             {
                 var folderName = Path.Combine("wwwroot", "uploads", "images", "customers");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                var fileName = Guid.NewGuid().ToString() + "_" + updatedCustomer.Name + ".png";
+                var fileName = Guid.NewGuid().ToString() + "_" + customer.Username + ".png";
                 var fullPath = Path.Combine(pathToSave, fileName);
-
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
-
-                updatedCustomer.Image = "/uploads/images/customers/" + fileName;
+                customer.Image = "/uploads/images/customers/" + fileName;
             }
             else
             {
-                updatedCustomer.Image = updatedCustomer.Image;
+                customer.Image = oldCus.Image;
             }
 
-            await _unitOfWork.CustomerRepository.Update(updatedCustomer);
-            await _unitOfWork.Save();
+
+            if (string.IsNullOrEmpty(customer.PasswordHash))
+            {
+                // If no new password provided, keep the old password
+                customer.PasswordHash = oldCus.PasswordHash;
+                _mapper.Map(customer, oldCus);
+            }
+            else
+            {
+                _mapper.Map(customer, oldCus);
+                // If a new password is provided, hash it
+                var newPasswordHash = _userManager.PasswordHasher.HashPassword(oldCus, customer.PasswordHash);
+                // Update the staff's password hash
+                oldCus.PasswordHash = newPasswordHash;
+            }
+
+            // Update the user
+            await _userManager.UpdateAsync(oldCus);
         }
 
         public async Task DeleteCustomer(int id)
@@ -133,6 +178,16 @@ namespace MovieTheaterAPI.Services
         public async Task<int> CountTicketsBought(int id)
         {
             return await _unitOfWork.CustomerRepository.CountTicketsBought(id);
+        }
+
+        public async Task<bool> CheckDuplicateCustomer(string username, string email)
+        {
+            return await _unitOfWork.CustomerRepository.CheckDuplicateCustomer(username, email);
+        }
+
+        public async Task<bool> CheckDuplicateCustomerExcept(string username, string email, int id)
+        {
+            return await _unitOfWork.CustomerRepository.CheckDuplicateCustomerExcept(username, email, id);
         }
 
         //private string GenerateJwtToken(Customer customer)
