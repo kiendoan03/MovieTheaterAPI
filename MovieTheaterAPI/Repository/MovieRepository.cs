@@ -12,6 +12,14 @@ namespace MovieTheaterAPI.Repository
         {
         }
 
+        public async Task<bool> CheckMovieExistInTicket(int movieId)
+        {
+            var tickets = from t in _context.Tickets
+                          where t.Schedules.MovieId == movieId
+                          select t;
+            return await Task.FromResult(tickets.Any());
+        }
+
         public async Task<int> CountMoviesEnd()
         {
             var datetime = DateTime.Now;

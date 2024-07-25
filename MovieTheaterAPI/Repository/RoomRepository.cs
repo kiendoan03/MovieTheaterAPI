@@ -9,5 +9,13 @@ namespace MovieTheaterAPI.Repository
         public RoomRepository(MovieTheaterDbContext context) : base(context)
         {
         }
+
+        public async Task<bool> CheckRoomExistInTicket(int roomId)
+        {
+            var tickets = from t in _context.Tickets
+                          where t.Schedules.RoomId == roomId
+                          select t;
+            return await Task.FromResult(tickets.Any());
+        }
     }
 }

@@ -17,6 +17,11 @@ namespace MovieTheaterAPI.Services
             _mapper = mapper;
         }
 
+        public async Task<bool> CheckMovieExistInTicket(int movieId)
+        {
+            return await _unitOfWork.MovieRepository.CheckMovieExistInTicket(movieId);
+        }
+
         public async Task<int> CountMovies()
         {
             return await _unitOfWork.MovieRepository.Count();
@@ -98,7 +103,7 @@ namespace MovieTheaterAPI.Services
             }
             if(trailer.Length > 0)
             {
-                var folderName = Path.Combine("wwwroot", "uploads", "movieTrailers");
+                var folderName = Path.Combine("wwwroot", "uploads","videos", "movieTrailers");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 var fileName = Guid.NewGuid().ToString() + "_" + newMovie.MovieName + ".mp4";
                 var fullPath = Path.Combine(pathToSave, fileName);
@@ -122,6 +127,11 @@ namespace MovieTheaterAPI.Services
         public async Task DeleteMovie(int id)
         {
             var movie = await _unitOfWork.MovieRepository.GetById(id);
+            var checkMovieExistInTicket = await _unitOfWork.MovieRepository.CheckMovieExistInTicket(id);
+            if (checkMovieExistInTicket)
+            {
+                   throw new ArgumentException("Movie is already in use");
+            }
             await _unitOfWork.MovieRepository.Delete(movie);
             await _unitOfWork.Save();
         }
@@ -264,7 +274,7 @@ namespace MovieTheaterAPI.Services
 
             if(trailer != null && trailer.Length > 0)
             {
-                var folderName = Path.Combine("wwwroot", "uploads", "movieTrailers");
+                var folderName = Path.Combine("wwwroot", "uploads","videos", "movieTrailers");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 var fileName = Guid.NewGuid().ToString() + "_" + movie.MovieName + ".mp4";
                 var fullPath = Path.Combine(pathToSave, fileName);

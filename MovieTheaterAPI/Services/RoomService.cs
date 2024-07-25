@@ -83,6 +83,11 @@ namespace MovieTheaterAPI.Services
         public async Task DeleteRoom(int id)
         {
             var room = await _unitOfWork.RoomRepository.GetById(id);
+            var checkRoomExistInTicket = await _unitOfWork.RoomRepository.CheckRoomExistInTicket(id);
+            if (checkRoomExistInTicket)
+            {
+                throw new ArgumentException("Room is already in use");
+            }
             await _unitOfWork.RoomRepository.Delete(room);
             await _unitOfWork.Save();
         }

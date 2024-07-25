@@ -44,6 +44,23 @@ namespace MovieTheaterAPI.Repository
             return await Task.FromResult(schedules);
         }
 
+        public async Task<IEnumerable<Schedule>> GetSchedulesByRoom(int roomId)
+        {
+            var schedules = from s in _context.Schedules
+                            join m in _context.Movies on s.MovieId equals m.Id
+                            where s.RoomId == roomId
+                            select new Schedule
+                            {
+                                Id = s.Id,
+                                Movie = m,
+                                ScheduleDate = s.ScheduleDate,
+                                StartTime = s.StartTime,
+                                EndTime = s.EndTime,
+                                // Add other properties from the Schedule entity as needed
+                            };
+            return await Task.FromResult(schedules);
+        }
+
         public async Task<IEnumerable<Schedule>> GetSchedulesWithMovieRoom()
         {
             var schedule = from s in _context.Schedules

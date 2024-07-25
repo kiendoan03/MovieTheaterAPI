@@ -34,9 +34,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\images\directors\" />
-    <Folder Include="wwwroot\uploads\images\movies\logos\" />
-    <Folder Include="wwwroot\uploads\images\movies\thumbnails\" />
-    <Folder Include="wwwroot\uploads\images\movies\posters\" />
     <Folder Include="wwwroot\uploads\images\staffs\" />
     <Folder Include="wwwroot\uploads\qrcodes\" />
   </ItemGroup>
