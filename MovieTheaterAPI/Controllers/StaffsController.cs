@@ -50,7 +50,7 @@ namespace MovieTheaterAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<ActionResult<StaffDTO>> GetStaff(int id)
         {
             var staff = await _staffService.GetStaffById(id);
